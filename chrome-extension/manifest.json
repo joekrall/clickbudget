@@ -1,0 +1,20 @@
+{
+  "name": "TimeBudget",
+  "version": "1.0",
+  "description": "Track your time on the web! Thanks for the title, Danielle Holton!",
+ "permissions": ["history"],
+  "browser_action": {
+    "default_popup": "typedUrls.html",
+    "default_icon": {
+      "24": "images/icons8-imac-clock-24.png",
+      "48": "images/icons8-imac-clock-48.png",
+      "96": "images/icons8-imac-clock-96.png"
+    }
+  },
+  "icons": {
+  "24": "images/icons8-imac-clock-24.png",
+  "48": "images/icons8-imac-clock-48.png",
+  "96": "images/icons8-imac-clock-96.png"
+  },
+  "manifest_version": 2
+}
