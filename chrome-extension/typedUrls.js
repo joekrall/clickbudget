@@ -1,6 +1,4 @@
-import 
-
-function buildUrlList(divName) {
+function buildUrlList() {
 
   // To look for history items visited in the last day,
   // subtract a day of microseconds from the current time.
@@ -15,13 +13,21 @@ function buildUrlList(divName) {
     },
     function(historyItems) {
       for (var i = 0; i < historyItems.length; ++i) {
-        urlArray.push(historyItems[i].url);
-      }
 
-      buildPopupDom(divName, urlArray);
+        const data = historyItems[i].url;
+        const request = new XMLHttpRequest();
+
+        request.open('POST', "http://localhost:8000/timebudget/sites", true);
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'); 
+        request.send(data);
+
+        console.log(request);
+      }          
+
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  buildUrlList("typedUrl_div");
+  console.log("The DOM loaded");
+  buildUrlList();
 });

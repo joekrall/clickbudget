@@ -2,8 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
-// We're using sites
-mongoose.connect('mongodb://localhost/sites', {useNewUrlParser: true})
+mongoose.connect('mongodb://localhost/timebudget', {useNewUrlParser: true})
 
 const app = express()
 
