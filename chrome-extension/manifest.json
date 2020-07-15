@@ -2,7 +2,7 @@
   "name": "TimeBudget",
   "version": "1.0",
   "description": "Track your time on the web! Thanks for the title, Danielle Holton!",
- "permissions": ["history"],
+ "permissions": ["history", "http://localhost:8000/sites"],
  "background": {
   "scripts": ["typedUrls.js"],
   "persistent": false

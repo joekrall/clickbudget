@@ -14,8 +14,10 @@ class SiteList extends Component {
     
     return (
       <li>
+
         <p className="text-left mb-0">Name: {siteData.title} </p>
         <p className="text-right mb-0">${siteData.url}</p>
+        <p className="text-left mb-0">Visit Count in Last 24 Hours: {siteData.visitCount} </p>
       </li>
     );
   }
