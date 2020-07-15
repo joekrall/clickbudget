@@ -8,20 +8,22 @@ function buildUrlList() {
 
   var urlArray = [];
 
+  // I'd like to get it to work at startTime: sinceLastClick
   chrome.history.search({
       'text': '',
       'startTime': oneDayAgo
     },
     function(historyItems) {
+      // Replace with historyItems.length at some point
       for (var i = 0; i < historyItems.length; ++i) {
         console.log(historyItems[i]);
 
         fetch('http://localhost:8000/sites', {
           method: 'post',
           headers: {
-            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
-          },
-          body: historyItems[i]
+            'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"
+        },
+          body: `lastVisitTime=${historyItems[i].lastVisitTime}&title=${historyItems[i].title}&url=${historyItems[i].url}&typedCount=${historyItems[i].typedCount}&visitCount=${historyItems[i].visitCount}`
         })
         .then(function (data) {
           console.log('Request succeeded with JSON response', data);

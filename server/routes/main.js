@@ -2,7 +2,9 @@ const router = require('express').Router()
 const Site = require('../models/sites')
 
 router.post('/sites', (req, res, next) => {
-
+  
+  let siteInfo = JSON.parse(req.body);
+  console.log(siteInfo);
   let site = new Site();
 
   site.lastVisitTime = req.body.lastVisitTime;
