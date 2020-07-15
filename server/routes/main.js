@@ -3,14 +3,17 @@ const Site = require('../models/sites')
 
 router.post('/sites', (req, res, next) => {
   
-  let siteInfo = JSON.parse(req.body);
-  console.log(siteInfo);
   let site = new Site();
+
+  // Trim https://
+  let trimmedUrl = req.body.url.substring(req.body.url.indexOf("//") + 2);
+  // Trim averything after .com, .org, etc
+  let fullyTrimmedUrl = trimmedUrl.substring(0, trimmedUrl.indexOf('/'));
 
   site.lastVisitTime = req.body.lastVisitTime;
   site.title = req.body.title;
   // I need some sort of trim function here
-  site.url = req.body.url;
+  site.url = fullyTrimmedUrl;
   site.typedCount = req.body.typedCount;
   site.visitCount = req.body.visitCount;
 

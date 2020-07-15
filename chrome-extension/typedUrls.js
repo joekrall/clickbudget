@@ -1,4 +1,8 @@
 
+//Maybe make a button such that we can get a timestamp onClick
+//And set startTime to that time so that we only get a list
+//Of what hasn't been gotten
+
 function buildUrlList() {
 
   // To look for history items visited in the last day,
@@ -11,7 +15,8 @@ function buildUrlList() {
   // I'd like to get it to work at startTime: sinceLastClick
   chrome.history.search({
       'text': '',
-      'startTime': oneDayAgo
+      'startTime': oneDayAgo,
+      'maxResults': 10000
     },
     function(historyItems) {
       // Replace with historyItems.length at some point
