@@ -10,21 +10,13 @@ class SiteList extends Component {
     
  }
 
-  renderProducts(siteData) {
+  renderSites(siteData) {
     
     return (
-      <div className="col-md-4 pt-2 mb-4 border">
-        <div className="row d-flex ">
-          <div className="col-sm-9 mx-auto d-block">
-            <div className="d-flex justify-content-between ">
-            <p className="text-left mb-0">Category: {siteData.title} </p>
-            <p className="text-right mb-0">${siteData.url}</p>
-            </div>
-          </div>
-         </div>
-      <h5 className="text-center">{productData.title}</h5>
-  
-      </div>
+      <li>
+        <p className="text-left mb-0">Name: {siteData.title} </p>
+        <p className="text-right mb-0">${siteData.url}</p>
+      </li>
     );
   }
 
@@ -38,7 +30,7 @@ class SiteList extends Component {
 }
 
 function mapStateToProps(state) {
-  return { sites: state.sites }; 
+  return { sites: state.siteData }; 
 }
 
 function mapDispatchToProps(dispatch) {

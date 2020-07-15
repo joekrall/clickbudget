@@ -1,8 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 
-import Sitelist from '../containers/site-list';
-
+import SiteList from '../containers/site-list';
 
 export default class App extends Component {
   render() {

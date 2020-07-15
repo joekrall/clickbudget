@@ -28,11 +28,11 @@ router.post('/sites', (req, res, next) => {
 
 router.get('/sites', (req, res, next) => {
 
-  Product
+  Site
     .find()
     .exec((err, sites) => {
-        res.send({sites: sites})
-      })
+        res.send(sites)
+    })
       
 })
 
