@@ -2,7 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const SiteSchema = new Schema({
-  url: String
+  lastVisitTime: Number,
+  title: String,
+  url: String,
+  typedCount: Number,
+  visitCount: Number
 })
 
 module.exports = mongoose.model('Site', SiteSchema) 

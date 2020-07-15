@@ -5,7 +5,12 @@ router.post('/sites', (req, res, next) => {
 
   let site = new Site();
 
+  site.lastVisitTime = req.body.lastVisitTime;
+  site.title = req.body.title;
+  // I need some sort of trim function here
   site.url = req.body.url;
+  site.typedCount = req.body.typedCount;
+  site.visitCount = req.body.visitCount;
 
   // When we get the sites, we will want to have the user's
   // categories here, as well as basic categories for search
@@ -13,11 +18,25 @@ router.post('/sites', (req, res, next) => {
   // If site.url matches url in *category* array, then we tag site
   // with .category matching the array name
 
-  site.save((err) => {
-    if (err) throw err
+  site.save((err, s) => {
+    if (err) throw err;
+    res.send(s);
   })
 
-  res.end(site)
+  
 })
 
+router.get('/sites', (req, res, next) => {
+
+  Product
+    .find()
+    .exec((err, sites) => {
+        res.send({sites: sites})
+      })
+      
+})
+
+
+
 module.exports = router
+
