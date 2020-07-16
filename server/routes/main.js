@@ -53,13 +53,36 @@ router.post('/sites', (req, res, next) => {
 
 })
 
+  // What do I want? I want to have three options based on query
+  // Just a site dump
+  // Then enough for a graph
+  // Then categorized.
+
 router.get('/sites', (req, res, next) => {
 
-  Site
-    .find()
-    .exec((err, sites) => {
-      res.send(sites)
+  const aggregate = req.body.aggregate;
+
+  // This is all the sites
+  if (aggregate) {
+    Site.aggregate([{
+      $group: {
+        _id: '$url',
+        count: {
+          $sum: '$visitCount'
+        },
+        lastVisit: {$max: '$lastVisitTime'}
+      }
+    }])
+    .exec((err, aggregatedSites) => {
+      res.send(aggregatedSites)
     })
+  } else {
+    Site
+      .find()
+      .exec((err, sites) => {
+        res.send(sites)
+      })
+  }
 
 })
 
