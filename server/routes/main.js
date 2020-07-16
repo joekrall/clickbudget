@@ -1,19 +1,39 @@
 const router = require('express').Router()
 const Site = require('../models/sites')
 
+// utils //
+
+const trimUrl = (url) => {
+  let urlSansHttp = url.substring(url.indexOf("//") + 2);
+  let urlSansHttpAndEverythingAfterFirstSlash = urlSansHttp.substring(0, urlSansHttp.indexOf('/'));
+
+  return urlSansHttpAndEverythingAfterFirstSlash;
+}
+
+
+// Find a way to categorize the sites
+// We need a database of category strings
+// It'd be nice if we could just compare URLs to what's already in the sites
+// Making category objects that we can add sites to
+// { category: stuff, sites: [stuff.com, stuff.org, stuff.io]}
+
+const categorizeUrls = (url) => {
+
+}
+
+// the big four //
+
 router.post('/sites', (req, res, next) => {
   
   let site = new Site();
 
   // Trim https://
-  let trimmedUrl = req.body.url.substring(req.body.url.indexOf("//") + 2);
-  // Trim averything after .com, .org, etc
-  let fullyTrimmedUrl = trimmedUrl.substring(0, trimmedUrl.indexOf('/'));
+  let trimmedUrl = trimUrl(req.body.url);
 
   site.lastVisitTime = req.body.lastVisitTime;
   site.title = req.body.title;
   // I need some sort of trim function here
-  site.url = fullyTrimmedUrl;
+  site.url = trimmedUrl;
   site.typedCount = req.body.typedCount;
   site.visitCount = req.body.visitCount;
 
@@ -40,6 +60,16 @@ router.get('/sites', (req, res, next) => {
     })
       
 })
+
+// Two graphs
+// One by URL
+// One by category
+// Then a tab to set goals on
+// and another tab to see all traffic by site and category
+// Maybe get a timeline graph to plot what gets hit by time
+// For both site and category. 
+// Maybe a little golden mean graph... showing safe sites, and hits
+// in the middle... outside of that line . . . Work, communication/social, gaming...
 
 
 

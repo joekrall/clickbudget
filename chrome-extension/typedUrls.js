@@ -3,6 +3,9 @@
 //And set startTime to that time so that we only get a list
 //Of what hasn't been gotten
 
+// Reinvent as ClickBudget. Where do you clicks go?
+// You can set goals. It's not so much the time as the power of the initial click
+
 function buildUrlList() {
 
   // To look for history items visited in the last day,

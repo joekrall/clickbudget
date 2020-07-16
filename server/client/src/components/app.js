@@ -1,5 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
+import { Row, Col, Container } from "react-bootstrap";
 
 import SiteList from '../containers/site-list';
 
@@ -7,20 +8,16 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <div className="container">
-          <div className="row justify-content-center my-3">
-            <div>
-              <h1>TimeBudget</h1>
-            </div>
-          </div>
-        </div>
+        <Container>
+          <Row className="justify-content-center my-3">
+              <h1>ClickBudget</h1>
+          </Row>
+        </Container>
 
-        <div className="container ">            
+        <Container>            
           <SiteList />
-        </div>
-        <div className="container">
 
-        </div>
+        </Container>
       </div>
     );
   }

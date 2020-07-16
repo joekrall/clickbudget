@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Row, Col, Container, ListGroup, ListGroupItem } from "react-bootstrap";
 import { fetchSites } from '../actions/index';
 
 class SiteList extends Component {
@@ -13,19 +14,19 @@ class SiteList extends Component {
   renderSites(siteData) {
     
     return (
-      <li>
 
-        <p className="text-left mb-0">Name: {siteData.title} </p>
-        <p className="text-right mb-0">${siteData.url}</p>
-        <p className="text-left mb-0">Visit Count in Last 24 Hours: {siteData.visitCount} </p>
-      </li>
+      <ListGroup.Item>
+        <p>Name: {siteData.title} </p>
+        <p>{siteData.url}</p>
+        <p>Visit Count in Last 24 Hours: {siteData.visitCount} </p>
+     </ListGroup.Item>
     );
   }
 
   render() {
     return (
       <div>
-        <ul className="site row ">{this.props.sites.map(this.renderSites)}</ul>
+        <ListGroup>{this.props.sites.map(this.renderSites)}</ListGroup>
       </div>
     );
   }
