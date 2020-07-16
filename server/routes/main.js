@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const Site = require('../models/sites')
+const Category = require('../models/categories')
 
 // utils //
 
@@ -17,6 +18,7 @@ const trimUrl = (url) => {
 // Making category objects that we can add sites to
 // { category: stuff, sites: [stuff.com, stuff.org, stuff.io]}
 
+// use regex to compare in case some thing in the database doesn't have www. in front
 const categorizeUrls = (url) => {
 
 }
@@ -24,7 +26,7 @@ const categorizeUrls = (url) => {
 // the big four //
 
 router.post('/sites', (req, res, next) => {
-  
+
   let site = new Site();
 
   // Trim https://
@@ -48,7 +50,7 @@ router.post('/sites', (req, res, next) => {
     res.send(s);
   })
 
-  
+
 })
 
 router.get('/sites', (req, res, next) => {
@@ -56,9 +58,56 @@ router.get('/sites', (req, res, next) => {
   Site
     .find()
     .exec((err, sites) => {
-        res.send(sites)
+      res.send(sites)
     })
-      
+
+})
+
+router.post('/categories', (req, res, next) => {
+
+  let category = new Category();
+
+  category.name = req.body.name;
+
+  for (let i = 0; i < req.body.sites.length; i++) {
+    category.sites.push(req.body.sites[i]);
+  }
+
+  category.save((err, cat) => {
+    if (err) throw err;
+    res.send(cat);
+  })
+
+})
+
+
+// It'd be cool to do a bulk update at some point, extension maybe??
+router.put('/categories/:category', (req, res, next) => {
+
+  let site = req.body.site;
+
+  Category
+    .findById(req.params.category, (err, category) => {
+      if (err) throw err;
+
+
+    if (category.sites.includes(site)) {        
+        res.send("Site already exists in category!")
+    }
+      else {
+        category.sites.push(site);
+
+
+        // save product, console log success or error,
+        // and return product in response
+        category.save(err => {
+          if (err) throw err;
+          else console.log('Site successfully added!');
+        });
+        res.send(category);
+      }
+    });
+
 })
 
 // Two graphs
@@ -74,4 +123,3 @@ router.get('/sites', (req, res, next) => {
 
 
 module.exports = router
-
