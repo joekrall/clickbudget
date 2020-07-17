@@ -74,6 +74,9 @@ router.get('/sites', (req, res, next) => {
       }
     }])
     .exec((err, aggregatedSites) => {
+
+      // Get a count and send that through redux tomorrow
+      // Use that for percentages... or not ... we could just post
       res.send(aggregatedSites)
     })
   } else {

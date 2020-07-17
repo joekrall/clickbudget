@@ -1,4 +1,7 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { fetchSites } from '../actions/index';
 import Highcharts from 'highcharts';
 
 class Donut extends React.Component {
@@ -11,22 +14,18 @@ class Donut extends React.Component {
                     {
                       name: 'Argon',
                       y: 0.9,
-                      color: '#3498db'
                     },
                     {
                       name: 'Nitrogen',
                       y: 78.1,
-                      color: '#9b59b6'
                     },
                     {
                       name: 'Oxygen',
                       y: 20.9,
-                      color: '#2ecc71'
                     },
                     {
                       name: 'Trace Gases',
                       y: 0.1,
-                      color: '#f1c40f'
                     }
                 ]
             }]
@@ -71,4 +70,13 @@ class Donut extends React.Component {
    	}
 }
 
-export default Donut;
+function mapStateToProps(state) {
+  console.log(state.siteData)
+  return { sites: state.siteData }; 
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ fetchSites }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Donut);
