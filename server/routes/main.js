@@ -60,10 +60,10 @@ router.post('/sites', (req, res, next) => {
 
 router.get('/sites', (req, res, next) => {
 
-  const aggregate = req.body.aggregate;
+  const aggregate = req.query.aggregate;
 
   // This is all the sites
-  if (aggregate) {
+  if (aggregate === 'true') {
     Site.aggregate([{
       $group: {
         _id: '$url',
@@ -77,6 +77,7 @@ router.get('/sites', (req, res, next) => {
       res.send(aggregatedSites)
     })
   } else {
+
     Site
       .find()
       .exec((err, sites) => {

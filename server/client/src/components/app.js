@@ -2,6 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import { Row, Col, Container } from "react-bootstrap";
 
+import Donut from '../containers/donut';
 import SiteList from '../containers/site-list';
 
 export default class App extends Component {
@@ -14,7 +15,8 @@ export default class App extends Component {
           </Row>
         </Container>
 
-        <Container>            
+        <Container>
+          <Donut />            
           <SiteList />
 
         </Container>

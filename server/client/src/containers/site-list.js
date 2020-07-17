@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { Row, Col, Container, ListGroup, ListGroupItem } from "react-bootstrap";
 import { fetchSites } from '../actions/index';
 
+
 class SiteList extends Component {
+
 
   componentDidMount() {
     this.props.fetchSites();
@@ -16,9 +18,9 @@ class SiteList extends Component {
     return (
 
       <ListGroup.Item>
-        <p>Name: {siteData.title} </p>
-        <p>{siteData.url}</p>
-        <p>Visit Count in Last 24 Hours: {siteData.visitCount} </p>
+        <p>{siteData._id}</p>
+        <p>Visit Count in Last 24 Hours: {siteData.count} </p>
+        <p>Most recent visit: {siteData.lastVisit}</p>
      </ListGroup.Item>
     );
   }
@@ -26,6 +28,7 @@ class SiteList extends Component {
   render() {
     return (
       <div>
+
         <ListGroup>{this.props.sites.map(this.renderSites)}</ListGroup>
       </div>
     );
@@ -33,6 +36,7 @@ class SiteList extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log(state.siteData)
   return { sites: state.siteData }; 
 }
 
