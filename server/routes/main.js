@@ -131,7 +131,7 @@ router.get('/sites', (req, res, next) => {
 
       res.send({
         totalVisitCount: totalVisitCount,
-        aggregatedSites: aggregatedSites
+        sites: aggregatedSites // Note same name
       })
     })
   } else {
