@@ -4,7 +4,17 @@ const Category = require('../models/categories')
 const axios = require('axios');
 const { request } = require('express');
 
-let categories = axios.get( 'http://localhost:8080/categories');
+// set categories - function call at server startup
+
+let categories = [];
+
+axios.get('http://localhost:8080/categories')
+    .then(result => { console.log("Categories now populating"); setCategories(result); })
+    .catch(error => { console.error(error); return Promise.reject(error); });
+
+const setCategories = (response) => {
+  categories = response.data;
+}
 
 // utils //
 
@@ -34,16 +44,21 @@ const trimUrl = (url) => {
 
 function categorizeUrl(url) {
 
+  let flag = false;
+  let categorizationOfUrl = null;
+ 
+  categories.forEach((category) => {
+    console.log(category.name)
+    category.sites.forEach((site) => {
+      if (site === url) {
+        categorizationOfUrl = category.name;
+        flag = true;
+      }
+    })
+  })
 
-  let category = categories.data;
-  // 
-  for (let i = 0; i < categories.length; i++) {
-    if (categories.sites.includes(url))
-      category = category.name;
-  }
-
-  if (category) {
-    return category;
+  if (flag) {
+    return categorizationOfUrl;
   } else {
     return "Uncategorized";
   }
@@ -57,12 +72,13 @@ router.post('/sites', (req, res, next) => {
   let site = new Site();
   let trimmedUrl = trimUrl(req.body.url);
 
-  let siteCategory = categorizeUrl(trimmedUrl);
+  let urlCategory = categorizeUrl(trimmedUrl);
 
   site.fullUrl = req.body.url;
   site.lastVisitTime = req.body.lastVisitTime;
   site.title = req.body.title;
   site.url = trimmedUrl;
+  site.category = urlCategory;
   site.typedCount = req.body.typedCount;
   site.visitCount = req.body.visitCount;
 

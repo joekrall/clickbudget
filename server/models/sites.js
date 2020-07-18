@@ -6,6 +6,7 @@ const SiteSchema = new Schema({
   title: String,
   fullUrl: String,
   url: String,
+  category: String,
   typedCount: Number,
   visitCount: Number
 })
