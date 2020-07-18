@@ -111,24 +111,48 @@ router.get('/sites', (req, res, next) => {
     Site.aggregate([{
       $group: {
         _id: '$url',
-        count: {
+        visitCount: {
           $sum: '$visitCount'
         },
-        lastVisit: {$max: '$lastVisitTime'}
+        lastVisit: {$max: '$lastVisitTime'},
+        category: {$max: '$category'}
       }
     }])
     .exec((err, aggregatedSites) => {
 
-      // Get a count and send that through redux tomorrow
-      // Use that for percentages... or not ... we could just post
-      res.send(aggregatedSites)
+      let totalVisitCount = 0;
+
+      for (i = 0; i < aggregatedSites.length; i++) {
+        console.log("Iteration number " + i)
+        console.log("Count is " + totalVisitCount)
+        console.log("+ " + aggregatedSites[i].visitCount)
+        totalVisitCount += aggregatedSites[i].visitCount;
+      }
+
+      res.send({
+        totalVisitCount: totalVisitCount,
+        aggregatedSites: aggregatedSites
+      })
     })
   } else {
 
     Site
       .find()
       .exec((err, sites) => {
-        res.send(sites)
+
+      let totalVisitCount = 0;
+
+      for (i = 0; i < sites.length; i++) {
+        console.log("Iteration number " + i)
+        console.log("Count is " + totalVisitCount)
+        console.log("+ " + sites[i].visitCount)
+        totalVisitCount += sites[i].visitCount;
+      }
+  
+          res.send({
+            totalVisitCount: totalVisitCount,
+            sites: sites
+          })
       })
   }
 
