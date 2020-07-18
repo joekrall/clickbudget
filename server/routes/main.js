@@ -48,7 +48,6 @@ function categorizeUrl(url) {
   let categorizationOfUrl = null;
  
   categories.forEach((category) => {
-    console.log(category.name)
     category.sites.forEach((site) => {
       if (site === url) {
         categorizationOfUrl = category.name;
@@ -56,6 +55,8 @@ function categorizeUrl(url) {
       }
     })
   })
+
+  console.log("we're all ready done categorization")
 
   if (flag) {
     return categorizationOfUrl;
@@ -69,29 +70,33 @@ function categorizeUrl(url) {
 
 router.post('/sites', (req, res, next) => {
 
-  let site = new Site();
-  let trimmedUrl = trimUrl(req.body.url);
+  const secondFunction = async () => {
 
-  let urlCategory = categorizeUrl(trimmedUrl);
+  await axios.get('http://localhost:8080/categories')
+    .then(result => { console.log("Categories now re-populating, I should be first"); setCategories(result); })
+    .catch(error => { console.error(error); return Promise.reject(error); });
 
-  site.fullUrl = req.body.url;
-  site.lastVisitTime = req.body.lastVisitTime;
-  site.title = req.body.title;
-  site.url = trimmedUrl;
-  site.category = urlCategory;
-  site.typedCount = req.body.typedCount;
-  site.visitCount = req.body.visitCount;
+    let site = new Site();
+    let trimmedUrl = trimUrl(req.body.url);
+    console.log("I should go second")
+    let urlCategory = categorizeUrl(trimmedUrl);
 
-  // When we get the sites, we will want to have the user's
-  // categories here, as well as basic categories for search
-  // We check each site we get back against those categories
-  // If site.url matches url in *category* array, then we tag site
-  // with .category matching the array name
+    site.fullUrl = req.body.url;
+    site.lastVisitTime = req.body.lastVisitTime;
+    site.title = req.body.title;
+    site.url = trimmedUrl;
+    site.category = urlCategory;
+    site.typedCount = req.body.typedCount;
+    site.visitCount = req.body.visitCount;
 
-  site.save((err, s) => {
-    if (err) throw err;
-    res.send(s);
-  })
+    site.save((err, s) => {
+      if (err) throw err;
+      res.send(s);
+    })
+
+}
+
+secondFunction();
 
 
 })
