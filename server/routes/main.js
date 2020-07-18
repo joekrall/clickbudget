@@ -1,41 +1,54 @@
 const router = require('express').Router()
 const Site = require('../models/sites')
 const Category = require('../models/categories')
+const axios = require('axios');
+const { request } = require('express');
+
+let categories = axios.get( 'http://localhost:8080/categories');
 
 // utils //
 
 const trimUrl = (url) => {
+  // And here
   let urlSansHttp = url.substring(url.indexOf("//") + 2);
+
+  // I need an if statement here so I don't destroy my URL
   let urlSansHttpAndEverythingAfterFirstSlash = urlSansHttp.substring(0, urlSansHttp.indexOf('/'));
 
   return urlSansHttpAndEverythingAfterFirstSlash;
 }
 
 
-// Find a way to categorize the sites
-// We need a database of category strings
-// It'd be nice if we could just compare URLs to what's already in the sites
-// Making category objects that we can add sites to
-// { category: stuff, sites: [stuff.com, stuff.org, stuff.io]}
+function categorizeUrl(url) {
 
-// use regex to compare in case some thing in the database doesn't have www. in front
-const categorizeUrls = (url) => {
+  let category = null;
+  // 
+  for (let i = 0; i < categories.length; i++) {
+    if (categories.sites.includes(url))
+      category = category.name;
+  }
+
+  if (category) {
+    return category;
+  } else {
+    return "Uncategorized";
+  }
 
 }
 
-// the big four //
+// Routes //
 
 router.post('/sites', (req, res, next) => {
 
   let site = new Site();
+ // let trimmedUrl = trimUrl(req.body.url);
 
-  // Trim https://
-  let trimmedUrl = trimUrl(req.body.url);
+  let siteCategory = categorizeUrl(req.body.url);
 
+  site.fullUrl = req.body.url;
   site.lastVisitTime = req.body.lastVisitTime;
   site.title = req.body.title;
-  // I need some sort of trim function here
-  site.url = trimmedUrl;
+  //site.url = trimmedUrl;
   site.typedCount = req.body.typedCount;
   site.visitCount = req.body.visitCount;
 
@@ -53,10 +66,6 @@ router.post('/sites', (req, res, next) => {
 
 })
 
-  // What do I want? I want to have three options based on query
-  // Just a site dump
-  // Then enough for a graph
-  // Then categorized.
 
 router.get('/sites', (req, res, next) => {
 
@@ -89,64 +98,5 @@ router.get('/sites', (req, res, next) => {
   }
 
 })
-
-router.post('/categories', (req, res, next) => {
-
-  let category = new Category();
-
-  category.name = req.body.name;
-
-  for (let i = 0; i < req.body.sites.length; i++) {
-    category.sites.push(req.body.sites[i]);
-  }
-
-  category.save((err, cat) => {
-    if (err) throw err;
-    res.send(cat);
-  })
-
-})
-
-
-// It'd be cool to do a bulk update at some point, extension maybe??
-router.put('/categories/:category', (req, res, next) => {
-
-  let site = req.body.site;
-
-  Category
-    .findById(req.params.category, (err, category) => {
-      if (err) throw err;
-
-
-    if (category.sites.includes(site)) {        
-        res.send("Site already exists in category!")
-    }
-      else {
-        category.sites.push(site);
-
-
-        // save product, console log success or error,
-        // and return product in response
-        category.save(err => {
-          if (err) throw err;
-          else console.log('Site successfully added!');
-        });
-        res.send(category);
-      }
-    });
-
-})
-
-// Two graphs
-// One by URL
-// One by category
-// Then a tab to set goals on
-// and another tab to see all traffic by site and category
-// Maybe get a timeline graph to plot what gets hit by time
-// For both site and category. 
-// Maybe a little golden mean graph... showing safe sites, and hits
-// in the middle... outside of that line . . . Work, communication/social, gaming...
-
-
 
 module.exports = router

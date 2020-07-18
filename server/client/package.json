@@ -10,10 +10,12 @@
     "bootstrap": "^4.5.0",
     "highcharts": "^8.1.2",
     "highcharts-react-official": "^3.0.0",
+    "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.2.2",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
     "redux-promise": "^0.6.0"
