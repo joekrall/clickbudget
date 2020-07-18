@@ -37,10 +37,11 @@ const sideRoutes = require('./routes/side')
 app.use(mainRoutes)
 app2.use(sideRoutes)
 
+app2.listen(8080, () => {
+  console.log('Node.js app2 listening on port ' + 8080)
+})
+
 app.listen(8000, () => {
   console.log('Node.js app listening on port ' + 8000)
 })
 
-app2.listen(8080, () => {
-  console.log('Node.js app2 listening on port ' + 8080)
-})

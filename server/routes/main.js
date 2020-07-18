@@ -9,11 +9,24 @@ let categories = axios.get( 'http://localhost:8080/categories');
 // utils //
 
 const trimUrl = (url) => {
-  // And here
-  let urlSansHttp = url.substring(url.indexOf("//") + 2);
 
-  // I need an if statement here so I don't destroy my URL
-  let urlSansHttpAndEverythingAfterFirstSlash = urlSansHttp.substring(0, urlSansHttp.indexOf('/'));
+  let urlSansHttp = "";
+  if (url.includes("https://")) {
+     urlSansHttp = url.substring(url.indexOf("//") + 2);
+  } else
+  if (url.includes("http://")) {
+    urlSansHttp = url.substring(url.indexOf("//") + 2);
+  } else {
+    urlSansHttp = url;
+  }
+
+  let urlSansHttpAndEverythingAfterFirstSlash = "";
+
+  if (urlSansHttp.includes('/')) {
+    urlSansHttpAndEverythingAfterFirstSlash = urlSansHttp.substring(0, urlSansHttp.indexOf('/'));
+  } else {
+    urlSansHttpAndEverythingAfterFirstSlash = urlSansHttp;
+  }
 
   return urlSansHttpAndEverythingAfterFirstSlash;
 }
@@ -21,7 +34,8 @@ const trimUrl = (url) => {
 
 function categorizeUrl(url) {
 
-  let category = null;
+
+  let category = categories.data;
   // 
   for (let i = 0; i < categories.length; i++) {
     if (categories.sites.includes(url))
@@ -41,14 +55,14 @@ function categorizeUrl(url) {
 router.post('/sites', (req, res, next) => {
 
   let site = new Site();
- // let trimmedUrl = trimUrl(req.body.url);
+  let trimmedUrl = trimUrl(req.body.url);
 
-  let siteCategory = categorizeUrl(req.body.url);
+  let siteCategory = categorizeUrl(trimmedUrl);
 
   site.fullUrl = req.body.url;
   site.lastVisitTime = req.body.lastVisitTime;
   site.title = req.body.title;
-  //site.url = trimmedUrl;
+  site.url = trimmedUrl;
   site.typedCount = req.body.typedCount;
   site.visitCount = req.body.visitCount;
 
