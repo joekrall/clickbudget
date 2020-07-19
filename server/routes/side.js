@@ -32,7 +32,7 @@ router.get('/categories', (req, res, next) => {
     res.send(categories)
   })
 
-})
+}) 
 
 
 // It'd be cool to do a bulk update at some point, extension maybe??
