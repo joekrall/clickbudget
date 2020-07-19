@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col, Container, ListGroup, ListGroupItem, Dropdown } from "react-bootstrap";
-import { fetchSites, fetchCategories } from '../actions/index';
+import Moment from 'react-moment';
+import 'moment-timezone';
+import { fetchSites, fetchCategories, updateCategory, updateSites } from '../actions/index';
 
 
 class SiteList extends Component {
@@ -21,14 +23,23 @@ class SiteList extends Component {
     this.props.fetchSites();
  }
 
-  selectCategoryFromMenu = (categoryId, siteName, event) => {
+  selectCategoryFromMenu = (categoryName, categoryId, siteName, event) => {
     event.preventDefault();
     console.log("i was clicked and the site is " + siteName)
-    // if (category === "(None)") {
-    //   this.props.setCategory(null);
-    // } else {
-    //   this.props.setCategory(category);
-    // }
+
+    const secondFunction = async () => {
+    if (categoryId === "(None)") { // Replace with id for Uncategorized
+      this.props.updateCategory(categoryId, siteName);
+    } else {
+      this.props.updateCategory(categoryId, siteName);
+      this.props.updateSites(siteName, categoryName)
+      alert(siteName + "now has category " + categoryName)
+    }
+  }
+
+    secondFunction();
+
+  //  this.props.fetchSites();
   }
 
   renderCategories(categoryData) {
@@ -36,7 +47,7 @@ class SiteList extends Component {
     return (
       <div>
       <Dropdown.Item 
-        onClick={event => this.selectCategoryFromMenu(categoryData._id, categoryData.siteName, event)}>
+        onClick={event => this.selectCategoryFromMenu(categoryData.name, categoryData._id, categoryData.siteName, event)}>
         {categoryData.name}
         </Dropdown.Item>
       </div>
@@ -45,13 +56,15 @@ class SiteList extends Component {
 
   renderSites(siteData) {
 
+    // Creating categories with this specific site on it
     let categoriesForThisItem = [];
     this.props.categories.map((category) => {
+
       let categoryForThisItem = {};
       categoryForThisItem["siteName"] = siteData._id;
       categoryForThisItem["_id"] = category._id;
       categoryForThisItem["name"] = category.name;
-      console.log(categoryForThisItem)
+
       categoriesForThisItem.push(categoryForThisItem);
     })
     
@@ -60,7 +73,8 @@ class SiteList extends Component {
       <ListGroup.Item>
         <p>{siteData._id}</p>
         <p>Visit Count in Last 24 Hours: {siteData.visitCount} </p>
-        <p>Most recent visit: {siteData.lastVisit}</p>
+        <p>Most recent visit: <Moment local>{siteData.lastVisit}</Moment></p>
+        <p>Category: {siteData.category}</p>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Set Category
@@ -93,7 +107,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchSites, fetchCategories }, dispatch);
+  return bindActionCreators({ fetchSites, fetchCategories, updateCategory, updateSites}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SiteList);

@@ -1,16 +1,20 @@
 const router = require('express').Router()
 const Category = require('../models/categories')
+const axios = require('axios')
 const { request } = require('express');
 
 router.post('/categories', (req, res, next) => {
 
   let category = new Category();
 
+  console.log(req.body)
   category.name = req.body.name;
 
-  for (let i = 0; i < req.body.sites.length; i++) {
-    category.sites.push(req.body.sites[i]);
-  }
+  // if (req.body.sites) {
+  //   for (let i = 0; i < req.body.sites.length; i++) {
+  //     category.sites.push(req.body.sites[i]);
+  //   }
+  // }
 
   category.save((err, cat) => {
     if (err) throw err;

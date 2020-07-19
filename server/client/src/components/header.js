@@ -8,7 +8,7 @@ class Header extends Component {
 
     return (
       <Navbar bg="light" variant="light">
-      <Navbar.Brand href="#home">ClickBudget</Navbar.Brand>
+      <Link to="/"><Navbar.Brand href="/">ClickBudget</Navbar.Brand></Link>
       <Nav className="mr-auto">
       <Link to="/"><Nav.Link href="/metrics">Metrics</Nav.Link></Link>
       <Link to="/setgoals"><Nav.Link href="/setgoals">Set Goals</Nav.Link></Link>

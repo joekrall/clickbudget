@@ -1,17 +1,18 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:8000';
+const MAIN_URL = 'http://localhost:8000';
 const SIDE_URL = 'http://localhost:8080';
 
-export const FETCH_PRODUCTS = 'FETCH_SITES';
+export const FETCH_SITES = 'FETCH_SITES';
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
 export const CREATE_CATEGORY = 'CREATE_CATEGORY';
 export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
+export const UPDATE_SITES = 'UPDATE_SITES';
 export const SET_MAX = 'SET_MAX';
 
 
 export function fetchSites(aggregate = true) {
-  let url = ROOT_URL + "/sites"; 
+  let url = MAIN_URL + "/sites"; 
   
   if (aggregate) {
     url += "?aggregate=true";
@@ -19,7 +20,7 @@ export function fetchSites(aggregate = true) {
 
   const request = axios.get(url);
   return {
-    type: FETCH_PRODUCTS,
+    type: FETCH_SITES,
     payload: request
   };
 }
@@ -48,14 +49,41 @@ export function fetchCategories() {
 //   };
 // }
 
-// export function updateCategory(category) {
-//   let url = ROOT_URL + "/categories"; 
+export function updateCategory(categoryId, siteName) {
+  let url = SIDE_URL + "/categories" + "/" + categoryId; 
 
-//   // I need to figure out body
-//   const request = axios.post(url);
+  console.log("updateCategory was hit")
 
-//   return {
-//     type: FETCH_PRODUCTS,
-//     payload: request
-//   };
-// }
+  const params = new URLSearchParams();
+  params.append('site', siteName)
+  const request = axios({
+    method: 'put',
+    url: url,
+    data: params
+  });
+
+  return {
+    type: UPDATE_CATEGORY,
+    payload: request
+  };
+}
+
+export function updateSites(siteName, categoryName) {
+  let url = MAIN_URL + "/sites" 
+
+  console.log("updateSites was hit")
+
+  const params = new URLSearchParams();
+  params.append('category', categoryName);
+  params.append('url', siteName)
+  const request = axios({
+    method: 'put',
+    url: url,
+    data: params
+  });
+
+  return {
+    type: UPDATE_SITES,
+    payload: request
+  };
+}

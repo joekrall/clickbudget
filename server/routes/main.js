@@ -56,12 +56,10 @@ function categorizeUrl(url) {
     })
   })
 
-  console.log("we're all ready done categorization")
-
   if (flag) {
     return categorizationOfUrl;
   } else {
-    return "Uncategorized";
+    return "";
   }
 
 }
@@ -104,58 +102,76 @@ secondFunction();
 
 router.get('/sites', (req, res, next) => {
 
-  const aggregate = req.query.aggregate;
+    const aggregate = req.query.aggregate;
 
-  // This is all the sites
-  if (aggregate === 'true') {
-    Site.aggregate([{
-      $group: {
-        _id: '$url',
-        visitCount: {
-          $sum: '$visitCount'
-        },
-        lastVisit: {$max: '$lastVisitTime'},
-        category: {$max: '$category'}
-      }
-    }])
-    .exec((err, aggregatedSites) => {
+    // This is all the sites
+    if (aggregate === 'true') {
+      Site.aggregate([{
+          $group: {
+            _id: '$url',
+            visitCount: {
+              $sum: '$visitCount'
+            },
+            lastVisit: {
+              $max: '$lastVisitTime'
+            },
+            category: {
+              $max: '$category'
+            }
+          }
+        }])
+        .exec((err, aggregatedSites) => {
 
-      let totalVisitCount = 0;
+          let totalVisitCount = 0;
 
-      for (i = 0; i < aggregatedSites.length; i++) {
-        console.log("Iteration number " + i)
-        console.log("Count is " + totalVisitCount)
-        console.log("+ " + aggregatedSites[i].visitCount)
-        totalVisitCount += aggregatedSites[i].visitCount;
-      }
+          for (i = 0; i < aggregatedSites.length; i++) {
+            totalVisitCount += aggregatedSites[i].visitCount;
+          }
 
-      res.send({
-        totalVisitCount: totalVisitCount,
-        sites: aggregatedSites // Note same name
-      })
-    })
-  } else {
+          res.send({
+            totalVisitCount: totalVisitCount,
+            sites: aggregatedSites // Note same name
+          })
+        })
+    } else {
 
-    Site
-      .find()
-      .exec((err, sites) => {
+      Site
+        .find()
+        .exec((err, sites) => {
 
-      let totalVisitCount = 0;
+          let totalVisitCount = 0;
 
-      for (i = 0; i < sites.length; i++) {
-        console.log("Iteration number " + i)
-        console.log("Count is " + totalVisitCount)
-        console.log("+ " + sites[i].visitCount)
-        totalVisitCount += sites[i].visitCount;
-      }
-  
+          for (i = 0; i < sites.length; i++) {
+            totalVisitCount += sites[i].visitCount;
+          }
+
           res.send({
             totalVisitCount: totalVisitCount,
             sites: sites
           })
-      })
-  }
+        })
+    }
+
 
 })
+
+router.put('/sites', (req, res, next) => {
+
+  console.log(req.body);
+  let category = req.body.category;
+  let url = req.body.url;
+
+  Site
+    .updateMany( 
+      {"url": url}, 
+      { "$set": { "category" : category } }, 
+      {"multi": true}, 
+      (err, result) => {
+        res.send(result);
+    });
+
+})
+
+
 
 module.exports = router
