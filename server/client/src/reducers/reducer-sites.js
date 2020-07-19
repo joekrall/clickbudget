@@ -1,6 +1,6 @@
 import { FETCH_SITES, UPDATE_SITES } from '../actions/index';
 
-export default function( state = {totalVisitCount: 0, sites: [], categoryCounter: {}}, action) {
+export default function( state = {totalVisitCount: 0, sites: [], categoryCountArray: []}, action) {
   switch (action.type) {
     case FETCH_SITES:
       return action.payload.data;

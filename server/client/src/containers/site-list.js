@@ -25,7 +25,6 @@ class SiteList extends Component {
 
   selectCategoryFromMenu = (categoryName, categoryId, siteName, event) => {
     event.preventDefault();
-    console.log("i was clicked and the site is " + siteName)
 
       // I need to add "none" to the database.
       const firstFunction = async () => {
@@ -67,10 +66,11 @@ class SiteList extends Component {
     
     return (
       <ListGroup.Item>
-        <p>{siteData._id}</p>
-        <p>Visit Count in Last 24 Hours: {siteData.visitCount} </p>
-        <p>Most recent visit: <Moment local>{siteData.lastVisit}</Moment></p>
-        <p>Category: {siteData.category}</p>
+        <Row>
+       <Col><p>{siteData._id}</p></Col>
+       <Col><p>{siteData.visitCount} </p></Col>
+       <Col><p><Moment local>{siteData.lastVisit}</Moment></p></Col>
+       <Col><p>{siteData.category}</p>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Set Category
@@ -81,17 +81,26 @@ class SiteList extends Component {
              categoriesForThisItem.map(this.renderCategories)
             }
           </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown></Col>
+        </Row>
      </ListGroup.Item>
     );
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
 
-        <ListGroup>{this.props.sites.map(this.renderSites)}</ListGroup>
+      <ListGroup>
+        <ListGroup.Item>
+        <Row>
+          <Col><h5>URL</h5></Col>
+          <Col><h5>Visit Count from Last 24 Hours</h5></Col>
+          <Col><h5>Most Recent Vist</h5></Col>
+          <Col><h5>Category</h5></Col>
+        </Row>
+     </ListGroup.Item>
+          {this.props.sites.map(this.renderSites)}</ListGroup>
       </div>
     );
   }

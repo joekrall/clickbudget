@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Container, ListGroup, ListGroupItem, Dropdown } from "react-bootstrap";
 import Moment from 'react-moment';
 import 'moment-timezone';
-import { fetchSites, fetchCategories } from '../actions/index';
+import { fetchSites, fetchCategories, updateCategory } from '../actions/index';
 
 
 class CategoryList extends Component {
@@ -13,6 +13,7 @@ class CategoryList extends Component {
     super(props);
 
     this.renderCategories = this.renderCategories.bind(this);
+    this.renderSites = this.renderSites.bind(this);
   }
 
   componentDidMount() {
@@ -20,13 +21,22 @@ class CategoryList extends Component {
 
  }
 
+ renderSites(site) {
+   return(
+    <ListGroup.Item>{site}</ListGroup.Item>
+   );
+ }
+
 
   renderCategories(categoryData) {
     
     return (
       <ListGroup.Item>
-        <p>{categoryData.name} </p>
-        <p>All sites: {categoryData.sites}</p>
+        <Row>
+        <Col><p>{categoryData.name} </p></Col>
+        <Col><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
+        <Col></Col>
+        </Row>
      </ListGroup.Item>
     );
   }
@@ -36,7 +46,16 @@ class CategoryList extends Component {
     return (
       <div>
 
-        <ListGroup>{this.props.categories.map(this.renderCategories)}</ListGroup>
+        <ListGroup>
+          <ListGroup.Item>
+            <Row>
+              <Col><h5>Category</h5></Col>
+              <Col><h5>Sites</h5></Col>
+              <Col><h5>Maximum Clicks Budget</h5></Col>
+            </Row>
+          </ListGroup.Item>
+          {this.props.categories.map(this.renderCategories)}
+        </ListGroup>
       </div>
     );
   }
@@ -48,7 +67,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchCategories }, dispatch);
+  return bindActionCreators({ fetchCategories, updateCategory }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CategoryList);

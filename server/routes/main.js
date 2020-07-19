@@ -125,18 +125,26 @@ router.get('/sites', (req, res, next) => {
         ])
         .exec((err, aggregatedSites) => {
           
-          let categoryCounter = aggregatedSites.reduce((accumulator, currentSite) => {
+          let categoryCountArray = aggregatedSites.reduce((accumulator, currentSite) => {
             let keyName = currentSite.category;
             let currentVisitCount = currentSite.visitCount;
-
-            if (accumulator.hasOwnProperty(keyName)) {
-                accumulator[keyName] += currentVisitCount;
+            let newObject = {
+              name: keyName,
+              count: currentVisitCount
+            }
+          
+            if (accumulator.some( obj => obj['name'] === newObject.name )) {
+                accumulator.forEach((obj) => {
+                  if (obj['name'] === newObject.name) {
+                    obj.count += newObject.count;
+                  }
+                })
               } else {
-                accumulator[keyName] = currentVisitCount;
+          
+                accumulator.push(newObject);
               }
-
             return accumulator;
-          }, {})
+          }, [])
 
           let totalVisitCount = 0;
 
@@ -145,7 +153,7 @@ router.get('/sites', (req, res, next) => {
           }
 
           res.send({
-            categoryCounter: categoryCounter,
+            categoryCountArray: categoryCountArray,
             totalVisitCount: totalVisitCount,
             sites: aggregatedSites // Note same name
           })

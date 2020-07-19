@@ -9,43 +9,37 @@ class Donut extends React.Component {
         super(props);
 
 
-        // So I'm not sure where to put this, but all I need is to group all the sites by category
-        // and add up their total clicks and compare it to
         this.state = {
-            series: [{
-                name: 'Gases',
-                data: [
-                    {
-                      name: 'Argon',
-                      y: 0.9,
-                    },
-                    {
-                      name: 'Nitrogen',
-                      y: 78.1,
-                    },
-                    {
-                      name: 'Oxygen',
-                      y: 20.9,
-                    },
-                    {
-                      name: 'Trace Gases',
-                      y: 0.1,
-                    }
-                ]
-            }]
+            series: []
         }
+
+        this.createSeries = this.createSeries.bind(this);
+    }
+
+    createSeries() {
+      let series = [{name: "Clicks", data: []}];
+
+      this.props.categoryCountArray.forEach((categoryObject) => {
+        let dataObject = {};
+        dataObject["name"] = categoryObject.name;
+        dataObject["y"] = categoryObject.count;
+
+        series[0].data.push(dataObject);
+      })
+
+      this.setState({series: series});
     }
 
     highChartsRender() {
         Highcharts.chart({
             chart: {
               type: 'pie',
-              renderTo: 'atmospheric-composition'
+              renderTo: 'clicks-by-category'
             },
             title: {
               verticalAlign: 'middle',
               floating: true,
-              text: 'Total clicks' + this.props.totalVisitCount,
+              text: 'Total clicks: ' + this.props.totalVisitCount,
               style: {
                 fontSize: '10px',
               }
@@ -63,14 +57,19 @@ class Donut extends React.Component {
     }
 
     componentDidMount() {
-    
-      const secondFunc = async () => {
-        await  this.props.fetchSites();
+
+      const thirdFunc = async () => {
+        await this.createSeries();
         this.highChartsRender();
       }
 
+      const secondFunc = async () => {
+        await  this.props.fetchCategories();
+        thirdFunc();
+      }
+
       const firstFunc = async () => {
-        await this.props.fetchCategories();
+        await this.props.fetchSites();
         secondFunc();
       }
 
@@ -79,16 +78,17 @@ class Donut extends React.Component {
 
    	render() {
        	return (
-            <div id="atmospheric-composition">
+            <div id="clicks-by-category">
             </div>
        	);
    	}
 }
 
 function mapStateToProps(state) {
+  console.log(state.siteData)
   return { sites: state.siteData.sites, 
     totalVisitCount: state.siteData.totalVisitCount, 
-    categoryCounter: state.siteData.categoryCounter,
+    categoryCountArray: state.siteData.categoryCountArray,
     categories: state.categories }; 
 }
 
