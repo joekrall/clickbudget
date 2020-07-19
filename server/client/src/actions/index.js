@@ -53,13 +53,21 @@ export function fetchCategories() {
 // three arguments - we always get categoryId, but siteName AND maxClickNumber
 // will be null depending on where its called. But then we can put search params
 // on body.data. And then, the server can see what is NULL and what is not.
-export function updateCategory(categoryId, siteName) {
+export function updateCategory(categoryId, siteName, maxClickNumber) {
   let url = SIDE_URL + "/categories" + "/" + categoryId; 
 
   console.log("updateCategory was hit")
 
   const params = new URLSearchParams();
-  params.append('site', siteName)
+  if (siteName !== null) {
+    params.append('site', siteName)
+  }
+  if (maxClickNumber !== null) {
+    params.append('maxClicks', maxClickNumber);
+  }
+
+  console.log(params);
+
   const request = axios({
     method: 'put',
     url: url,
@@ -72,14 +80,14 @@ export function updateCategory(categoryId, siteName) {
   };
 }
 
-export function updateSites(siteName, categoryName) {
+export function updateSites(siteName, categoryName, categoryId) {
   let url = MAIN_URL + "/sites" 
 
-  console.log("updateSites was hit")
 
   const params = new URLSearchParams();
   params.append('category', categoryName);
   params.append('url', siteName)
+  params.append('categoryId', categoryId)
   const request = axios({
     method: 'put',
     url: url,

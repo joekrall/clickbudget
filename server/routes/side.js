@@ -42,27 +42,48 @@ router.put('/categories/:category', (req, res, next) => {
   let site = req.body.site;
   let maxClick = req.body.maxClick;
 
-  Category
+  console.log(site + "<-- this is site");
+  console.log(maxClick + "<-- this is maxClick");
+
+  if (maxClick) {
+    Category
     .findById(req.params.category, (err, category) => {
       if (err) throw err;
 
-
-    if (category.sites.includes(site)) {        
-        res.send("Site already exists in category!")
-    }
-      else {
         category.sites.push(site);
 
-
-        // save product, console log success or error,
-        // and return product in response
         category.save(err => {
           if (err) throw err;
-          else console.log('Site successfully added!');
+          else console.log('maxClick successfully added!');
         });
+
         res.send(category);
+      });    
+  }  else if (site) {
+
+    // Not deleting properly!
+    Category
+      .update({}, {'$pull': {"sites": site } }, {"multi": true});
+
+    console.log("we are updating site because site is not null - or is it?")
+    Category
+      .findById(req.params.category, (err, category) => {
+        if (err) throw err;
+
+
+      if (category.sites.includes(site)) {        
+          res.send("Site already exists in category!")
       }
-    });
+        else {
+          category.sites.push(site);
+          category.save(err => {
+            if (err) throw err;
+            else console.log('Site successfully added!');
+          });
+          res.send(category);
+        }
+      });
+    }
 
 })
 

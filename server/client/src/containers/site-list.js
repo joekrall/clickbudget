@@ -29,8 +29,8 @@ class SiteList extends Component {
 
       // I need to add "none" to the database.
       const firstFunction = async () => {
-        await this.props.updateSites(siteName, categoryName); 
-        this.props.updateCategory(categoryId, siteName);
+        await this.props.updateSites(siteName, categoryName, categoryId); 
+        this.props.updateCategory(categoryId, siteName, null); // Rule count is null
         this.props.fetchSites();
         this.props.fetchCategories();
       }
