@@ -27,6 +27,7 @@ router.get('/categories', (req, res, next) => {
 
   Category
   .find()
+  .sort({name: 1})
   .exec((err, categories) => {
     res.send(categories)
   })

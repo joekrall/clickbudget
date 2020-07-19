@@ -118,8 +118,11 @@ router.get('/sites', (req, res, next) => {
             category: {
               $max: '$category'
             }
+          } },
+          { 
+            $sort: { _id: 1 } 
           }
-        }])
+        ])
         .exec((err, aggregatedSites) => {
 
           let totalVisitCount = 0;

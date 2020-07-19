@@ -39,7 +39,9 @@ class SiteList extends Component {
 
     secondFunction();
 
-  //  this.props.fetchSites();
+    this.props.fetchCategories();
+
+    this.props.fetchSites();
   }
 
   renderCategories(categoryData) {
@@ -102,7 +104,6 @@ class SiteList extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state)
   return { sites: state.siteData.sites, categories: state.categoryData }; 
 }
 
