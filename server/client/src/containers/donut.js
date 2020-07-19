@@ -1,12 +1,16 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchSites } from '../actions/index';
+import { fetchSites, fetchCategories } from '../actions/index';
 import Highcharts from 'highcharts';
 
 class Donut extends React.Component {
     constructor(props) {
         super(props);
+
+
+        // So I'm not sure where to put this, but all I need is to group all the sites by category
+        // and add up their total clicks and compare it to
         this.state = {
             series: [{
                 name: 'Gases',
@@ -41,7 +45,7 @@ class Donut extends React.Component {
             title: {
               verticalAlign: 'middle',
               floating: true,
-              text: 'Earth\'s Atmospheric Composition',
+              text: 'Total clicks' + this.props.totalVisitCount,
               style: {
                 fontSize: '10px',
               }
@@ -59,7 +63,18 @@ class Donut extends React.Component {
     }
 
     componentDidMount() {
+    
+      const secondFunc = async () => {
+        await  this.props.fetchSites();
         this.highChartsRender();
+      }
+
+      const firstFunc = async () => {
+        await this.props.fetchCategories();
+        secondFunc();
+      }
+
+      firstFunc();
     }
 
    	render() {
@@ -71,12 +86,14 @@ class Donut extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state.siteData)
-  return { sites: state.siteData }; 
+  return { sites: state.siteData.sites, 
+    totalVisitCount: state.siteData.totalVisitCount, 
+    categoryCounter: state.siteData.categoryCounter,
+    categories: state.categories }; 
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchSites }, dispatch);
+  return bindActionCreators({ fetchSites, fetchCategories }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Donut);

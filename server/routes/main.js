@@ -59,7 +59,7 @@ function categorizeUrl(url) {
   if (flag) {
     return categorizationOfUrl;
   } else {
-    return "";
+    return "Uncategorized";
   }
 
 }
@@ -78,7 +78,7 @@ router.post('/sites', (req, res, next) => {
     let trimmedUrl = trimUrl(req.body.url);
     console.log("I should go second")
     let urlCategory = categorizeUrl(trimmedUrl);
-
+    console.log(urlCategory);
     site.fullUrl = req.body.url;
     site.lastVisitTime = req.body.lastVisitTime;
     site.title = req.body.title;
@@ -124,6 +124,19 @@ router.get('/sites', (req, res, next) => {
           }
         ])
         .exec((err, aggregatedSites) => {
+          
+          let categoryCounter = aggregatedSites.reduce((accumulator, currentSite) => {
+            let keyName = currentSite.category;
+            let currentVisitCount = currentSite.visitCount;
+
+            if (accumulator.hasOwnProperty(keyName)) {
+                accumulator[keyName] += currentVisitCount;
+              } else {
+                accumulator[keyName] = currentVisitCount;
+              }
+
+            return accumulator;
+          }, {})
 
           let totalVisitCount = 0;
 
@@ -132,6 +145,7 @@ router.get('/sites', (req, res, next) => {
           }
 
           res.send({
+            categoryCounter: categoryCounter,
             totalVisitCount: totalVisitCount,
             sites: aggregatedSites // Note same name
           })
