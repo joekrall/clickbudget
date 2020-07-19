@@ -63,7 +63,13 @@ router.put('/categories/:category', (req, res, next) => {
 
     // Not deleting properly!
     Category
-      .update({}, {'$pull': {"sites": site } }, {"multi": true});
+      .update(
+      {"sites": site }, 
+      {'$pull': {"sites": site } }, 
+      {"multi": true},
+      function (err, val) {
+        console.log(val)
+      });
 
     console.log("we are updating site because site is not null - or is it?")
     Category
