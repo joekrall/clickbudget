@@ -49,6 +49,10 @@ export function fetchCategories() {
 //   };
 // }
 
+// What needs to happen here is that updateCategory will require
+// three arguments - we always get categoryId, but siteName AND maxClickNumber
+// will be null depending on where its called. But then we can put search params
+// on body.data. And then, the server can see what is NULL and what is not.
 export function updateCategory(categoryId, siteName) {
   let url = SIDE_URL + "/categories" + "/" + categoryId; 
 
@@ -84,6 +88,7 @@ export function updateSites(siteName, categoryName) {
 
   return {
     type: UPDATE_SITES,
-    payload: request
+    payload: request,
+    
   };
 }

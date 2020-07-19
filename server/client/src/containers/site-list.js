@@ -27,21 +27,16 @@ class SiteList extends Component {
     event.preventDefault();
     console.log("i was clicked and the site is " + siteName)
 
-    const secondFunction = async () => {
-    if (categoryId === "(None)") { // Replace with id for Uncategorized
-      this.props.updateCategory(categoryId, siteName);
-    } else {
-      this.props.updateCategory(categoryId, siteName);
-      this.props.updateSites(siteName, categoryName)
-      alert(siteName + "now has category " + categoryName)
-    }
-  }
+      // I need to add "none" to the database.
+      const firstFunction = async () => {
+        await this.props.updateSites(siteName, categoryName); 
+        this.props.updateCategory(categoryId, siteName);
+        this.props.fetchSites();
+        this.props.fetchCategories();
+      }
 
-    secondFunction();
-
-    this.props.fetchCategories();
-
-    this.props.fetchSites();
+      firstFunction();
+      alert(siteName + "now has category " + categoryName);
   }
 
   renderCategories(categoryData) {
@@ -70,7 +65,6 @@ class SiteList extends Component {
       categoriesForThisItem.push(categoryForThisItem);
     })
     
-    console.log(this)
     return (
       <ListGroup.Item>
         <p>{siteData._id}</p>

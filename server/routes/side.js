@@ -7,7 +7,6 @@ router.post('/categories', (req, res, next) => {
 
   let category = new Category();
 
-  console.log(req.body)
   category.name = req.body.name;
 
   // if (req.body.sites) {
@@ -35,10 +34,13 @@ router.get('/categories', (req, res, next) => {
 }) 
 
 
-// It'd be cool to do a bulk update at some point, extension maybe??
+// What I need to do here is decide if we have NULL come back
+// for maxClick or for site, to basically route the req to the
+// to the correct property to update.
 router.put('/categories/:category', (req, res, next) => {
 
   let site = req.body.site;
+  let maxClick = req.body.maxClick;
 
   Category
     .findById(req.params.category, (err, category) => {
