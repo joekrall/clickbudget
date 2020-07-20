@@ -10,11 +10,7 @@ class CategoryList extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      value: ""
-    }
-
-    this.handleChange = this.handleChange.bind(this);
+    this.state = { values: [] };
 
     this.renderCategories = this.renderCategories.bind(this);
     this.renderSites = this.renderSites.bind(this);
@@ -25,34 +21,20 @@ class CategoryList extends Component {
 
   componentDidMount() {
     this.props.fetchCategories();
-  
  }
 
-//  populateStateArray() {
 
-//   // I want an object that looks like this
-
-//   const stateObject = this.props.categories.reduce((obj, currentCategory) => {
-//     obj[currentCategory._id] = "";
-//     return obj;
-//   }, {})
-
-//   console.log(stateObject);
-  
-//   this.setState({stateObject: stateObject});
-
-//  }
-
- handleChange(event) {
-  this.setState({value: event.target.value});
-  console.log(this.state.value)
+ handleChange(index, event) {
+  let values = {...this.state.values};
+  values[index] = event.target.value;
+  this.setState({ values });
 }
 
 
- submitBudget(categoryId, event) {
+ submitBudget(categoryId, index, event) {
    event.preventDefault();
     // if (typeof this.state.budgetNumber === "number" && this.state.budgetNumber >= 0) {
-      console.log("submitBudget was clicked and the number is" + this.state.value + " and id is" + categoryId)
+  console.log("submitBudget was clicked and the number is" + this.state.values[index] + " and id is" + categoryId)
       //this.props.updateCategory(categoryId, null, this.state.budgetNumber)
     // } 
 }
@@ -71,17 +53,21 @@ clearBudget(categoryId, event) {
 
 
   renderCategories(categoryData) {
-    
+
+    const index = this.state.values.length;
+
+    this.setState(prevState => ({ values: [...prevState.values, '']}))
+
     return (
-      <ListGroup.Item>
+      <ListGroup.Item >
         <Row>
           <Col><p>{categoryData.name} </p></Col>
           <Col className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
           <Col>
-        <Form onSubmit={(e) => this.submitBudget(categoryData._id, e)}>
-          <Form.Group controlId="submitBudget">
+        <Form onSubmit={(e) => this.submitBudget(categoryData._id, index, e)}>
+          <Form.Group controlId={"submitBudget" + index}>
             <Form.Label>Enter maximum for category</Form.Label>
-            <Form.Control type="number" placeholder="E.g. 100, 500" value={this.state.value} onChange={this.handleChange}/>
+            <Form.Control type="number" placeholder="E.g. 100, 500" value={this.state.values[index]} onChange={this.handleChange.bind(this, index)}/>
           </Form.Group>
           <Button variant="primary" type="submit">
             Submit
@@ -109,7 +95,7 @@ clearBudget(categoryId, event) {
             <Row>
               <Col><h5>Category</h5></Col>
               <Col><h5>Sites</h5></Col>
-              <Col><h5>Maximum Clicks Budget</h5></Col>
+              <Col><h5>Maximum Clicks</h5></Col>
             </Row>
           </ListGroup.Item>
           {this.props.categories.map(this.renderCategories)}

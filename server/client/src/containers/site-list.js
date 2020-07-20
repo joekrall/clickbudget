@@ -12,6 +12,7 @@ class SiteList extends Component {
   constructor(props) {
     super(props);
 
+    
     this.selectCategoryFromMenu = this.selectCategoryFromMenu.bind(this);
     this.renderSites = this.renderSites.bind(this);
     this.renderCategories = this.renderCategories.bind(this);
