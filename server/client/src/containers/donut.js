@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchSites, fetchCategories } from '../actions/index';
 import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official'
 
 class Donut extends React.Component {
     constructor(props) {
