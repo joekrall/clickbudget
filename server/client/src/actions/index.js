@@ -37,17 +37,27 @@ export function fetchCategories() {
   };
 }
 
-// export function createCategory(category) {
-//   let url = ROOT_URL + "/categories"; 
+export function createCategory(category) {
+  let url = SIDE_URL + "/categories"; 
 
-//   // I need to figure out body
-//   const request = axios.post(url);
+  // I need to figure out body
 
-//   return {
-//     type: FETCH_PRODUCTS,
-//     payload: request
-//   };
-// }
+  const params = new URLSearchParams();
+  if (category !== null) {
+    params.append('name', category)
+  }
+
+  const request = axios({
+    method: 'post',
+    url: url,
+    data: params
+  });
+
+  return {
+    type: CREATE_CATEGORY,
+    payload: request
+  };
+}
 
 export function updateCategory(categoryId, siteName, maxClickNumber) {
   let url = SIDE_URL + "/categories" + "/" + categoryId; 

@@ -95,15 +95,7 @@ clearBudget(categoryId, event) {
 
           </Dropdown.Menu>
         </Dropdown>
-        {/* <Form onSubmit={(e) => this.submitBudget(categoryData._id, e)}>
-          <Form.Group>
-            <Form.Label>Enter maximum for category</Form.Label>
-            <Form.Control type="number" placeholder="E.g. 100, 500" ref={this.input}/>
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form> */}
+
         <br />
         <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
             Clear Budget

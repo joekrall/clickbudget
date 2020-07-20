@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Col, Container, ListGroup, ListGroupItem, Dropdown } from "react-bootstrap";
+import { Row, Col, Container, ListGroup, Button, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
 import Moment from 'react-moment';
 import 'moment-timezone';
-import { fetchSites, fetchCategories, updateCategory, updateSites } from '../actions/index';
+import { fetchSites, fetchCategories, updateCategory, updateSites, createCategory } from '../actions/index';
 
 
 class SiteList extends Component {
@@ -12,10 +12,15 @@ class SiteList extends Component {
   constructor(props) {
     super(props);
 
-    
+
+    // This binding is necessary to make `this` work in the callback
+    this.addNewCategory = this.addNewCategory.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.selectCategoryFromMenu = this.selectCategoryFromMenu.bind(this);
     this.renderSites = this.renderSites.bind(this);
     this.renderCategories = this.renderCategories.bind(this);
+
+    this.input = React.createRef();
   }
 
   componentDidMount() {
@@ -23,6 +28,19 @@ class SiteList extends Component {
 
     this.props.fetchSites();
  }
+
+
+  addNewCategory(event) {
+    if (this.input.current.value) {
+      const firstFunction = async () => {
+        await this.props.createCategory(this.input.current.value); 
+        this.props.fetchSites();
+        this.props.fetchCategories();
+      }
+      firstFunction();
+      alert("New category: " + this.input.current.value);
+    } else alert("No category name has been entered");
+  }
 
   selectCategoryFromMenu = (categoryName, categoryId, siteName, event) => {
     event.preventDefault();
@@ -91,7 +109,31 @@ class SiteList extends Component {
   render() {
     return (
       <div>
+      <br />
+      <Row>
+          <Col></Col>
+          <Col></Col>
 
+          <Col>
+            <Form.Label><h6>Add a new category</h6></Form.Label>
+            <InputGroup className="mb-3">
+            <InputGroup.Prepend>
+                <Button variant="primary" onClick={this.addNewCategory}>Submit</Button>
+              </InputGroup.Prepend>
+              <FormControl
+                placeholder="E.g. Social, Games"
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+                type="text" 
+                ref={this.input}
+                // value={this.state.value}
+                // onChange={this.handleChange.bind(this)}
+              />
+
+            </InputGroup>
+          </Col>
+        </Row>
+      <br />
       <ListGroup>
         <ListGroup.Item>
         <Row>
@@ -112,7 +154,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchSites, fetchCategories, updateCategory, updateSites}, dispatch);
+  return bindActionCreators({ fetchSites, fetchCategories, updateCategory, updateSites, createCategory}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SiteList);
