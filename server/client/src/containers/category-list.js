@@ -25,15 +25,30 @@ class CategoryList extends Component {
 
 
  submitBudget(budgetNumber, categoryId, event) {
-   console.log("budgetNumber is" + budgetNumber + "and categoryId " + categoryId);
-   event.preventDefault();
-    // if (typeof this.state.budgetNumber === "number" && this.state.budgetNumber >= 0) {
-      //this.props.updateCategory(categoryId, null, this.state.budgetNumber)
-    // } 
+  event.preventDefault();
+
+  const firstFunction = async () => {
+    await this.props.updateCategory(categoryId, null, budgetNumber)
+
+    this.props.fetchCategories();
+  }
+
+  firstFunction();
+  alert("You budgeted" + budgetNumber);
+
 }
 
 clearBudget(categoryId, event) {
-   this.props.updateCategory(categoryId, null, "")
+  event.preventDefault();
+
+  const firstFunction = async () => {
+    await this.props.updateCategory(categoryId, null, "CLEAR")
+
+    this.props.fetchCategories();
+  }
+
+  firstFunction();
+  alert("You cleared the budget");
 }
 
  renderSites(site) {
@@ -58,7 +73,7 @@ clearBudget(categoryId, event) {
 
           <Dropdown.Menu>
             <Dropdown.Item 
-              onClick={event => this.submitBudget(100, categoryData._id, event)}>
+              onClick={event => this.submitBudget(50, categoryData._id, event)}>
               50
             </Dropdown.Item>
             <Dropdown.Item 
@@ -66,15 +81,15 @@ clearBudget(categoryId, event) {
               100
             </Dropdown.Item>
             <Dropdown.Item 
-              onClick={event => this.submitBudget(100, categoryData._id, event)}>
+              onClick={event => this.submitBudget(250, categoryData._id, event)}>
               250
             </Dropdown.Item>
             <Dropdown.Item 
-              onClick={event => this.submitBudget(100, categoryData._id, event)}>
+              onClick={event => this.submitBudget(500, categoryData._id, event)}>
               500
             </Dropdown.Item>
             <Dropdown.Item 
-              onClick={event => this.submitBudget(100, categoryData._id, event)}>
+              onClick={event => this.submitBudget(1000, categoryData._id, event)}>
               1000
             </Dropdown.Item>
 

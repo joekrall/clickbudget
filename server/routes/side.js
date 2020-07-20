@@ -39,29 +39,34 @@ router.get('/categories', (req, res, next) => {
 // to the correct property to update.
 router.put('/categories/:category', (req, res, next) => {
 
+  console.log(req.body)
   let site = req.body.site;
-  let maxClick = req.body.maxClick;
+  let maxClicks = req.body.maxClicks;
 
-  console.log(site + "<-- this is site");
-  console.log(maxClick + "<-- this is maxClick");
+  console.log(site + " <-- this is site");
+  console.log(maxClicks + " <-- this is maxClick");
 
-  if (maxClick) {
+  if (maxClicks) {
     Category
     .findById(req.params.category, (err, category) => {
       if (err) throw err;
 
-        category.sites.push(site);
+      if (maxClicks === "CLEAR")
+        category.maxClicks = "";
+      else {
+        category.maxClicks = maxClicks;
+      }
 
         category.save(err => {
           if (err) throw err;
-          else console.log('maxClick successfully added!');
+          else console.log('maxClicks successfully added!');
         });
 
         res.send(category);
       });    
   }  else if (site) {
 
-    // Not deleting properly!
+
     Category
       .update(
       {"sites": site }, 
