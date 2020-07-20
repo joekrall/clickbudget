@@ -39,12 +39,8 @@ router.get('/categories', (req, res, next) => {
 // to the correct property to update.
 router.put('/categories/:category', (req, res, next) => {
 
-  console.log(req.body)
   let site = req.body.site;
   let maxClicks = req.body.maxClicks;
-
-  console.log(site + " <-- this is site");
-  console.log(maxClicks + " <-- this is maxClick");
 
   if (maxClicks) {
     Category
@@ -76,7 +72,6 @@ router.put('/categories/:category', (req, res, next) => {
         console.log(val)
       });
 
-    console.log("we are updating site because site is not null - or is it?")
     Category
       .findById(req.params.category, (err, category) => {
         if (err) throw err;

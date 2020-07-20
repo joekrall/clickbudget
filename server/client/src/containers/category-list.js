@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Col, ListGroup, Form, Button, FormControl, Dropdown } from "react-bootstrap";
+import { Row, Col, Container, ListGroup, Form, Button, FormControl, Dropdown } from "react-bootstrap";
 import { fetchSites, fetchCategories, updateCategory } from '../actions/index';
 
 
@@ -34,7 +34,6 @@ class CategoryList extends Component {
   }
 
   firstFunction();
-  alert("You budgeted" + budgetNumber);
 
 }
 
@@ -48,7 +47,6 @@ clearBudget(categoryId, event) {
   }
 
   firstFunction();
-  alert("You cleared the budget");
 }
 
  renderSites(site) {
@@ -63,46 +61,44 @@ clearBudget(categoryId, event) {
     return (
       <ListGroup.Item >
         <Row>
-          <Col><p>{categoryData.name} </p></Col>
-          <Col className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
-          <Col>
-          <Dropdown>
-          <Dropdown.Toggle variant="primary" id="dropdown-basic">
-            Set Budget
-          </Dropdown.Toggle>
+          <Col md={2}><p>{categoryData.name} </p></Col>
+          <Col md={2}><p>{categoryData.maxClicks}</p></Col>
+          <Col md={5} className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
+          <Col md={3}>
 
-          <Dropdown.Menu>
-            <Dropdown.Item 
-              onClick={event => this.submitBudget(50, categoryData._id, event)}>
-              50
-            </Dropdown.Item>
-            <Dropdown.Item 
-              onClick={event => this.submitBudget(100, categoryData._id, event)}>
-              100
-            </Dropdown.Item>
-            <Dropdown.Item 
-              onClick={event => this.submitBudget(250, categoryData._id, event)}>
-              250
-            </Dropdown.Item>
-            <Dropdown.Item 
-              onClick={event => this.submitBudget(500, categoryData._id, event)}>
-              500
-            </Dropdown.Item>
-            <Dropdown.Item 
-              onClick={event => this.submitBudget(1000, categoryData._id, event)}>
-              1000
-            </Dropdown.Item>
+          
+            <Dropdown>
+              <Dropdown.Toggle variant="info" id="dropdown-basic">
+                Set Budget
+              </Dropdown.Toggle>
 
-          </Dropdown.Menu>
-        </Dropdown>
+              <Dropdown.Menu>
+                <Dropdown.Item 
+                  onClick={event => this.submitBudget(50, categoryData._id, event)}>
+                  50
+                </Dropdown.Item>
+                <Dropdown.Item 
+                  onClick={event => this.submitBudget(100, categoryData._id, event)}>
+                  100
+                </Dropdown.Item>
+                <Dropdown.Item 
+                  onClick={event => this.submitBudget(500, categoryData._id, event)}>
+                  500
+                </Dropdown.Item>
+                <Dropdown.Item 
+                  onClick={event => this.submitBudget(1000, categoryData._id, event)}>
+                  1000
+                </Dropdown.Item>
+                <Dropdown.Item 
+                  onClick={event => this.submitBudget(250, categoryData._id, event)}>
+                  2000
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
+              Clear Budget
+          </Button>
 
-        <br />
-        <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
-            Clear Budget
-        </Button>
-          <br />
-          <br />
-          <p>Current Budget: {categoryData.maxClicks}</p>
         </Col>
         </Row>
      </ListGroup.Item>
@@ -112,13 +108,14 @@ clearBudget(categoryId, event) {
   render() {
     return (
       <div>
-
+        <br />
         <ListGroup>
           <ListGroup.Item>
             <Row>
-              <Col><h5>Category</h5></Col>
-              <Col><h5>Sites</h5></Col>
-              <Col><h5>Maximum Clicks</h5></Col>
+              <Col md={2}><h5>Category</h5></Col>
+              <Col md={2}><h5>Budget</h5></Col>
+              <Col md={5}><h5>Sites</h5></Col>
+              <Col md={3}><h5>Actions</h5></Col>
             </Row>
           </ListGroup.Item>
           {this.props.categories.map(this.renderCategories)}

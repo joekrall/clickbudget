@@ -71,14 +71,13 @@ router.post('/sites', (req, res, next) => {
   const secondFunction = async () => {
 
   await axios.get('http://localhost:8080/categories')
-    .then(result => { console.log("Categories now re-populating, I should be first"); setCategories(result); })
+    .then(result => { console.log("Categories now re-populating"); setCategories(result); })
     .catch(error => { console.error(error); return Promise.reject(error); });
 
     let site = new Site();
     let trimmedUrl = trimUrl(req.body.url);
-    console.log("I should go second")
     let urlCategory = categorizeUrl(trimmedUrl);
-    console.log(urlCategory);
+
     site.fullUrl = req.body.url;
     site.lastVisitTime = req.body.lastVisitTime;
     site.title = req.body.title;
@@ -182,16 +181,9 @@ router.get('/sites', (req, res, next) => {
 
 router.put('/sites', (req, res, next) => {
 
-  console.log(req.body);
   let category = req.body.category;
   let url = req.body.url;
   let categoryId = req.body.categoryId;
-
-  // const secondFunction = async () => {
-
-  //   await axios.put('http://localhost:8080/categories/' + categoryId)
-  //     .then(result => { console.log("Categories now re-populating, I should be first") })
-  //     .catch(error => { console.error(error); return Promise.reject(error); });
 
   Site
     .updateMany( 
@@ -201,10 +193,6 @@ router.put('/sites', (req, res, next) => {
       (err, result) => {
         res.send(result);
     });
-
-  // }
-
-  // secondFunction();
 
 })
 

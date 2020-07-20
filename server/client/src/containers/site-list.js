@@ -15,7 +15,6 @@ class SiteList extends Component {
 
     // This binding is necessary to make `this` work in the callback
     this.addNewCategory = this.addNewCategory.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.selectCategoryFromMenu = this.selectCategoryFromMenu.bind(this);
     this.renderSites = this.renderSites.bind(this);
     this.renderCategories = this.renderCategories.bind(this);
@@ -38,7 +37,6 @@ class SiteList extends Component {
         this.props.fetchCategories();
       }
       firstFunction();
-      alert("New category: " + this.input.current.value);
     } else alert("No category name has been entered");
   }
 
@@ -54,7 +52,6 @@ class SiteList extends Component {
       }
 
       firstFunction();
-      alert(siteName + "now has category " + categoryName);
   }
 
   renderCategories(categoryData) {
@@ -87,9 +84,10 @@ class SiteList extends Component {
       <ListGroup.Item>
         <Row>
        <Col><p>{siteData._id}</p></Col>
+       <Col><p>{siteData.category}</p></Col>
        <Col><p>{siteData.visitCount} </p></Col>
        <Col><p><Moment local>{siteData.lastVisit}</Moment></p></Col>
-       <Col><p>{siteData.category}</p>
+       <Col>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Set Category
@@ -115,10 +113,9 @@ class SiteList extends Component {
           <Col></Col>
 
           <Col>
-            <Form.Label><h6>Add a new category</h6></Form.Label>
             <InputGroup className="mb-3">
             <InputGroup.Prepend>
-                <Button variant="primary" onClick={this.addNewCategory}>Submit</Button>
+                <Button variant="info" onClick={this.addNewCategory}>Add Category</Button>
               </InputGroup.Prepend>
               <FormControl
                 placeholder="E.g. Social, Games"
@@ -138,9 +135,10 @@ class SiteList extends Component {
         <ListGroup.Item>
         <Row>
           <Col><h5>URL</h5></Col>
-          <Col><h5>Visit Count from Last 24 Hours</h5></Col>
-          <Col><h5>Most Recent Vist</h5></Col>
           <Col><h5>Category</h5></Col>
+          <Col><h5>Visit Count</h5></Col>
+          <Col><h5>Most Recent Vist</h5></Col>
+          <Col><h5>Actions</h5></Col>
         </Row>
      </ListGroup.Item>
           {this.props.sites.map(this.renderSites)}</ListGroup>

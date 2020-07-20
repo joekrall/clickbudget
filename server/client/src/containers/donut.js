@@ -25,19 +25,19 @@ class Donut extends React.Component {
         dataObject["name"] = categoryObject.name;
         dataObject["y"] = categoryObject.count;
 
-        this.props.categories.forEach((cat) => {
-          if (cat.name === categoryObject.name) {
-            console.log(cat.name + " is equal to " + categoryObject.name)
-            if (cat.maxClicks !== null) {
-              dataObject["name"] = categoryObject.name + " (Budget: " + cat.maxClicks + ")";
-              console.log("cat.maxClicks is equal to " + cat.maxClicks)
-              console.log("categoryObject.count is equal to " + categoryObject.count)
-              if (cat.maxClicks < categoryObject.count) {
-              dataObject["color"] = "#FF0000";
-              }
-            }
-          }
-        })
+        // this.props.categories.forEach((cat) => {
+        //   if (cat.name === categoryObject.name) {
+        //     console.log(cat.name + " is equal to " + categoryObject.name)
+        //     if (cat.maxClicks !== null) {
+        //       dataObject["name"] = categoryObject.name + " (Budget: " + cat.maxClicks + ")";
+        //       console.log("cat.maxClicks is equal to " + cat.maxClicks)
+        //       console.log("categoryObject.count is equal to " + categoryObject.count)
+        //       if (cat.maxClicks < categoryObject.count) {
+        //       dataObject["color"] = "#FF0000";
+        //       }
+        //     }
+        //   }
+        // })
 
         series[0].data.push(dataObject);
       })
