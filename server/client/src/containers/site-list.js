@@ -7,7 +7,7 @@ import 'moment-timezone';
 import { fetchSites, fetchCategories, updateCategory, updateSites, createCategory } from '../actions/index';
 
 
-class SiteList extends Component {
+class SiteList extends React.Component {
 
   constructor(props) {
     super(props);

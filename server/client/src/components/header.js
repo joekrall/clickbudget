@@ -10,7 +10,7 @@ class Header extends Component {
       <Navbar bg="info" variant="dark">
         <Navbar.Brand href="/">ClickBudget</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link href="/setgoals">Set Goals</Nav.Link>
+            <Nav.Link href="/setbudgets">Set Budgets</Nav.Link>
             <Nav.Link href="/categorize">View My Sites</Nav.Link>
       </Nav>
     </Navbar>

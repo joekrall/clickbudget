@@ -5,7 +5,7 @@ import { Row, Col, Container, ListGroup, Form, Button, FormControl, Dropdown } f
 import { fetchSites, fetchCategories, updateCategory } from '../actions/index';
 
 
-class CategoryList extends Component {
+class CategoryList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -64,11 +64,11 @@ clearBudget(categoryId, event) {
           <Col md={2}><p>{categoryData.name} </p></Col>
           <Col md={2}><p>{categoryData.maxClicks}</p></Col>
           <Col md={5} className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
-          <Col md={3}>
+          <Col md={3} className="d-flex">
 
           
             <Dropdown>
-              <Dropdown.Toggle variant="info" id="dropdown-basic">
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
                 Set Budget
               </Dropdown.Toggle>
 
@@ -90,15 +90,16 @@ clearBudget(categoryId, event) {
                   1000
                 </Dropdown.Item>
                 <Dropdown.Item 
-                  onClick={event => this.submitBudget(250, categoryData._id, event)}>
+                  onClick={event => this.submitBudget(2000, categoryData._id, event)}>
                   2000
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            <Dropdown>  
           <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
               Clear Budget
           </Button>
-
+          </Dropdown>
         </Col>
         </Row>
      </ListGroup.Item>
