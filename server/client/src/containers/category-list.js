@@ -58,15 +58,17 @@ clearBudget(categoryId, event) {
 
   renderCategories(categoryData) {
 
+
+    if(!categoryData.maxClicks) {
+
     return (
-      <ListGroup.Item >
+      <ListGroup.Item className="list-group-item list-group-item-warning">
         <Row>
-          <Col md={2}><p>{categoryData.name} </p></Col>
-          <Col md={2}><p>{categoryData.maxClicks}</p></Col>
+          <Col md={2}><h5>{categoryData.name} </h5></Col>
+          <Col md={2}><h5>{categoryData.maxClicks}</h5></Col>
           <Col md={5} className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
           <Col md={3} className="d-flex">
 
-          
             <Dropdown>
               <Dropdown.Toggle variant="success" id="dropdown-basic">
                 Set Budget
@@ -103,20 +105,75 @@ clearBudget(categoryId, event) {
         </Col>
         </Row>
      </ListGroup.Item>
-    );
+    )
+
+    } else {
+      return (
+      <ListGroup.Item >
+      <Row>
+        <Col md={2}><h5>{categoryData.name} </h5></Col>
+        <Col md={2}><h5>{categoryData.maxClicks}</h5></Col>
+        <Col md={5} className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
+        <Col md={3} className="d-flex">
+
+        
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              Set Budget
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item 
+                onClick={event => this.submitBudget(50, categoryData._id, event)}>
+                50
+              </Dropdown.Item>
+              <Dropdown.Item 
+                onClick={event => this.submitBudget(100, categoryData._id, event)}>
+                100
+              </Dropdown.Item>
+              <Dropdown.Item 
+                onClick={event => this.submitBudget(500, categoryData._id, event)}>
+                500
+              </Dropdown.Item>
+              <Dropdown.Item 
+                onClick={event => this.submitBudget(1000, categoryData._id, event)}>
+                1000
+              </Dropdown.Item>
+              <Dropdown.Item 
+                onClick={event => this.submitBudget(2000, categoryData._id, event)}>
+                2000
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <Dropdown>  
+        <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
+            Clear Budget
+        </Button>
+        </Dropdown>
+      </Col>
+      </Row>
+   </ListGroup.Item>
+  )
+    }
   }
 
   render() {
     return (
       <div>
         <br />
+        <Row>
+        <Col md={8}><h2>My Budgets</h2></Col>
+            
+        <Col md={4}></Col>
+        </Row>
+        <br />
         <ListGroup>
           <ListGroup.Item>
             <Row>
-              <Col md={2}><h5>Category</h5></Col>
-              <Col md={2}><h5>Budget</h5></Col>
-              <Col md={5}><h5>Sites</h5></Col>
-              <Col md={3}><h5>Actions</h5></Col>
+              <Col md={2}><h3>Category</h3></Col>
+              <Col md={2}><h3>Budget</h3></Col>
+              <Col md={5}><h3>Sites</h3></Col>
+              <Col md={3}><h3>Actions</h3></Col>
             </Row>
           </ListGroup.Item>
           {this.props.categories.map(this.renderCategories)}

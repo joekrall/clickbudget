@@ -66,7 +66,7 @@ class Donut extends React.Component {
             title: {
               verticalAlign: 'middle',
               floating: true,
-              text: 'Total visits: ' + this.props.totalVisitCount,
+              text: 'Total visits: ' + this.props.totalVisitCount, 
               style: {
                 fontSize: '10px',
               }

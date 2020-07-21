@@ -79,14 +79,16 @@ class SiteList extends React.Component {
 
       categoriesForThisItem.push(categoryForThisItem);
     })
+
+    if(siteData.category === "Uncategorized") {
     
     return (
-      <ListGroup.Item>
+      <ListGroup.Item className="list-group-item list-group-item-warning">
         <Row>
        <Col><p>{siteData._id}</p></Col>
-       <Col><p>{siteData.category}</p></Col>
-       <Col><p>{siteData.visitCount} </p></Col>
-       <Col><p><Moment local>{siteData.lastVisit}</Moment></p></Col>
+       <Col><h5>{siteData.category}</h5></Col>
+       <Col><h5>{siteData.visitCount} </h5></Col>
+       <Col><p><Moment format="LT - MMM D, YYYY" local>{siteData.lastVisit}</Moment></p></Col>
        <Col>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -102,6 +104,31 @@ class SiteList extends React.Component {
         </Row>
      </ListGroup.Item>
     );
+  } else {
+
+    return (
+      <ListGroup.Item >
+        <Row>
+        <Col><p>{siteData._id}</p></Col>
+        <Col><h5>{siteData.category}</h5></Col>
+        <Col><h5>{siteData.visitCount} </h5></Col>
+        <Col><p><Moment format="LT - MMM D, YYYY" local>{siteData.lastVisit}</Moment></p></Col>
+        <Col>
+        <Dropdown>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+            Set Category
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {
+              categoriesForThisItem.map(this.renderCategories)
+            }
+          </Dropdown.Menu>
+        </Dropdown></Col>
+        </Row>
+      </ListGroup.Item>
+    );
+  }
   }
 
   render() {
@@ -109,10 +136,9 @@ class SiteList extends React.Component {
       <div>
       <br />
       <Row>
-          <Col></Col>
-          <Col></Col>
-
-          <Col>
+          <Col md={8}><h2>My Sites</h2></Col>
+            
+          <Col md={4}>
             <InputGroup className="mb-3">
             <InputGroup.Prepend>
                 <Button variant="info" onClick={this.addNewCategory}>Add Category</Button>
@@ -134,11 +160,11 @@ class SiteList extends React.Component {
       <ListGroup>
         <ListGroup.Item>
         <Row>
-          <Col><h5>URL</h5></Col>
-          <Col><h5>Category</h5></Col>
-          <Col><h5>Visit Count</h5></Col>
-          <Col><h5>Most Recent Vist</h5></Col>
-          <Col><h5>Actions</h5></Col>
+          <Col><h3>URL</h3></Col>
+          <Col><h3>Category</h3></Col>
+          <Col><h3>Visit Count</h3></Col>
+          <Col><h3>Last Visit</h3></Col>
+          <Col><h3>Actions</h3></Col>
         </Row>
      </ListGroup.Item>
           {this.props.sites.map(this.renderSites)}</ListGroup>
