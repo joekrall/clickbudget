@@ -12,7 +12,7 @@ class BudgetTable extends React.Component {
 
     this.state = {
       records: [],
-      recordLoaded: false
+      recordLoaded: false,
     }
 
 
@@ -64,7 +64,6 @@ class BudgetTable extends React.Component {
         console.log("the actual budget table retrn was called")
 
      if (budgetData.maxClicks !== null) {
-
         let matchingRecord = this.state.records.filter(record => record.name === budgetData.name)
         if (matchingRecord[0]) {
           if(budgetData.maxClicks < matchingRecord[0].visits) {
@@ -95,7 +94,6 @@ class BudgetTable extends React.Component {
     };
 
     render() {
-      console.log("main render was called")
 
         return (
         <Table striped bordered hover size="sm">
@@ -112,7 +110,7 @@ class BudgetTable extends React.Component {
           </tbody>
         </Table>
         );
- 
+
     }
 
   }

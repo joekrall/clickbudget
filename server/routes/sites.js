@@ -4,22 +4,25 @@ const Category = require('../models/categories')
 const axios = require('axios');
 const { request } = require('express');
 
-// set categories - function call at server startup
+// When the server begins listening, we send 
+// out an initial function call to get categoriesForRoutes,
+// used by the categorizeUrl util bellow
 
-let categories = [];
+let categoriesForRoutes = [];
 
 axios.get('http://localhost:8080/categories')
     .then(result => { console.log("Categories now populating"); setCategories(result); })
     .catch(error => { console.error(error); return Promise.reject(error); });
 
 const setCategories = (response) => {
-  categories = response.data;
+  categoriesForRoutes = response.data;
 }
 
 // utils //
 
 const trimUrl = (url) => {
 
+  // removes http
   let urlSansHttp = "";
   if (url.includes("https://")) {
      urlSansHttp = url.substring(url.indexOf("//") + 2);
@@ -32,6 +35,7 @@ const trimUrl = (url) => {
 
   let urlSansHttpAndEverythingAfterFirstSlash = "";
 
+  // remove everything after the first slash
   if (urlSansHttp.includes('/')) {
     urlSansHttpAndEverythingAfterFirstSlash = urlSansHttp.substring(0, urlSansHttp.indexOf('/'));
   } else {
@@ -47,7 +51,7 @@ function categorizeUrl(url) {
   let flag = false;
   let categorizationOfUrl = null;
  
-  categories.forEach((category) => {
+  categoriesForRoutes.forEach((category) => {
     category.sites.forEach((site) => {
       if (site === url) {
         categorizationOfUrl = category.name;
@@ -68,23 +72,28 @@ function categorizeUrl(url) {
 
 router.post('/sites', (req, res, next) => {
 
-  const secondFunction = async () => {
+  const requestThenAddNewSites = async () => {
 
   await axios.get('http://localhost:8080/categories')
     .then(result => { console.log("Categories now re-populating"); setCategories(result); })
     .catch(error => { console.error(error); return Promise.reject(error); });
 
     let site = new Site();
+
+    // data processing
     let trimmedUrl = trimUrl(req.body.url);
     let urlCategory = categorizeUrl(trimmedUrl);
 
-    site.fullUrl = req.body.url;
+    // creating new site
     site.lastVisitTime = req.body.lastVisitTime;
-    site.title = req.body.title;
-    site.url = trimmedUrl;
-    site.category = urlCategory;
     site.typedCount = req.body.typedCount;
     site.visitCount = req.body.visitCount;
+
+    site.title = req.body.title;
+    site.url = trimmedUrl;
+    site.fullUrl = req.body.url;
+
+    site.category = urlCategory;
 
     site.save((err, s) => {
       if (err) throw err;
@@ -93,7 +102,7 @@ router.post('/sites', (req, res, next) => {
 
 }
 
-secondFunction();
+requestThenAddNewSites();
 
 
 })
@@ -103,7 +112,7 @@ router.get('/sites', (req, res, next) => {
 
     const aggregate = req.query.aggregate;
 
-    // This is all the sites
+    // Return all the sites aggregated by category
     if (aggregate === 'true') {
       Site.aggregate([{
           $group: {
@@ -113,6 +122,9 @@ router.get('/sites', (req, res, next) => {
             },
             lastVisit: {
               $max: '$lastVisitTime'
+            },
+            firstVisit: {
+              $min: '$lastVisitTime'
             },
             category: {
               $max: '$category'
@@ -151,12 +163,32 @@ router.get('/sites', (req, res, next) => {
             totalVisitCount += aggregatedSites[i].visitCount;
           }
 
+
+          let lastVisit = aggregatedSites.reduce((maxValue, currentAggregate) => {
+            if (maxValue < currentAggregate.lastVisit) {
+              maxValue = currentAggregate.lastVisit;
+            }
+              return maxValue
+          }, 0);
+          let firstVisit = aggregatedSites.reduce((minValue, currentAggregate) => {
+            if (minValue > currentAggregate.firstVisit) {
+              minValue = currentAggregate.firstVisit;
+            }
+              return minValue
+          }, lastVisit);
+
+          // Get max of lastVisit and min of firstVisit of aggregatedSites
+
           res.send({
+            firstVisit: firstVisit,
+            lastVisit: lastVisit,
             categoryCountArray: categoryCountArray,
             totalVisitCount: totalVisitCount,
             sites: aggregatedSites // Note same name
           })
         })
+
+    // If "aggregate" is false, return all the sites uncategorized
     } else {
 
       Site

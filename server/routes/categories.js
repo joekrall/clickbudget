@@ -9,6 +9,8 @@ router.post('/categories', (req, res, next) => {
 
   category.name = req.body.name;
 
+  // For future implementation
+
   // if (req.body.sites) {
   //   for (let i = 0; i < req.body.sites.length; i++) {
   //     category.sites.push(req.body.sites[i]);
@@ -24,6 +26,7 @@ router.post('/categories', (req, res, next) => {
 
 router.get('/categories', (req, res, next) => {
 
+  // Categories are sorted alphatically
   Category
   .find()
   .sort({name: 1})
@@ -40,26 +43,31 @@ router.get('/categories', (req, res, next) => {
 router.put('/categories/:category', (req, res, next) => {
 
   let site = req.body.site;
-  let maxClicks = req.body.maxClicks;
+  let maxVisits = req.body.maxVisits;
 
-  if (maxClicks) {
+  // If req.body.maxVisits exists, we update based on request
+  if (maxVisits) {
     Category
     .findById(req.params.category, (err, category) => {
       if (err) throw err;
 
-      if (maxClicks === "CLEAR")
-        category.maxClicks = "";
+      if (maxVisits === "CLEAR")
+        category.maxVisits = "";
       else {
-        category.maxClicks = maxClicks;
+        category.maxVisits = maxVisits;
       }
 
         category.save(err => {
           if (err) throw err;
-          else console.log('maxClicks successfully added!');
+          else console.log('maxVisits successfully added!');
         });
 
         res.send(category);
       });    
+
+  // If req.body.site exists, we pull the matching site from 
+  // any other sites array on each of the existing categories,
+  // and then add it to the category specified by req.params.category
   }  else if (site) {
 
 

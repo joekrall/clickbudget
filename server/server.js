@@ -4,11 +4,11 @@ const bodyParser = require('body-parser')
 
 mongoose.connect('mongodb://localhost/timebudget', {useNewUrlParser: true})
 
-const app = express()
-const app2 = express()
+const sitesApp = express()
+const categoriesApp = express()
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
+sitesApp.use(bodyParser.json())
+sitesApp.use(bodyParser.urlencoded({
   extended: true
 }))
 
@@ -19,29 +19,29 @@ app.use((req, res, next) => {
   next();
 });
 
-app2.use(bodyParser.json())
-app2.use(bodyParser.urlencoded({
+categoriesApp.use(bodyParser.json())
+categoriesApp.use(bodyParser.urlencoded({
   extended: true
 }))
 
-app2.use((req, res, next) => {
+categoriesApp.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
-const mainRoutes = require('./routes/main')
-const sideRoutes = require('./routes/side')
+const sitesRoutes = require('./routes/sites')
+const categoriesRoutes = require('./routes/categories')
 
-app.use(mainRoutes)
-app2.use(sideRoutes)
+sitesApp.use(sitesRoutes)
+categoriesApp.use(categoriesRoutes)
 
-app2.listen(8080, () => {
-  console.log('Node.js app2 listening on port ' + 8080)
+categoriesApp.listen(8080, () => {
+  console.log('Node.js categoriesApp listening on port ' + 8080)
 })
 
-app.listen(8000, () => {
+sitesApp.listen(8000, () => {
   console.log('Node.js app listening on port ' + 8000)
 })
 

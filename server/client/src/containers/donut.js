@@ -41,7 +41,7 @@ class Donut extends React.Component {
     }
 
     createSeries() {
-      let series = [{name: "Clicks", data: []}];
+      let series = [{name: "Visits", data: []}];
 
       this.props.categoryCountArray.forEach((categoryObject) => {
         let dataObject = {};

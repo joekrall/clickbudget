@@ -19,7 +19,7 @@ class MainView extends React.Component {
          <h4>Visualize, categorize, 
            and budget your browsing history!</h4>
          <br />
-         <h6>My Budget</h6>
+         <h6>Active Budgets</h6>
            <BudgetTable />
        </Col>
        <Col md={8}>
