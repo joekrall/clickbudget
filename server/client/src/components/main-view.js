@@ -14,10 +14,10 @@ class MainView extends React.Component {
      <Container>
        <Row className="mt-3">
        <Col md={4}>
-         <h1>Welcome!</h1>
+         <h1>Welcome to ClickBudget!</h1>
          <br />
          <h4>Visualize, categorize, 
-           and budget your browsing history!</h4>
+           and budget your browsing history.</h4>
          <br />
          <h6>Active Budgets</h6>
            <BudgetTable />

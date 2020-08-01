@@ -201,8 +201,26 @@ router.get('/sites', (req, res, next) => {
             totalVisitCount += sites[i].visitCount;
           }
 
+          
+          let lastVisit = sites.reduce((maxValue, currentSite) => {
+            if (maxValue < currentSite.lastVisitTime) {
+              maxValue = currentSite.lastVisitTime;
+            }
+              return maxValue
+          }, 0);
+
+          let firstVisit = sites.reduce((minValue, currentSite) => {
+            if (minValue > currentSite.lastVisitTime) {
+              minValue = currentSite.lastVisitTime;
+            }
+              return minValue
+          }, lastVisit);
+
+
           res.send({
             totalVisitCount: totalVisitCount,
+            firstVisit: firstVisit,
+            lastVisit: lastVisit,
             sites: sites
           })
         })
