@@ -94,15 +94,9 @@ class Donut extends React.Component {
             title: {
               verticalAlign: 'middle',
               floating: true,
-              text: 'Total visits: ' + this.props.totalVisitCount, 
+              text: 'Total visits:<br/>' + this.props.totalVisitCount, 
               style: {
                 fontSize: '12px',
-              }
-            },
-            subtitle: {
-              text:  "Time frame: " + this.state.timeRange + "\n",
-              style: {
-                fontSize: '16px',
                 fontWeight: 'bold',
               }
             },
@@ -126,6 +120,7 @@ class Donut extends React.Component {
           <div>
               <div id="clicks-by-category">
             </div>
+            <Row><Col className="text-center"><h6>Time range: {this.state.timeRange}</h6></Col></Row>
         </div>
          );
 
