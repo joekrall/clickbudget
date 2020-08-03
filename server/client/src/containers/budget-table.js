@@ -57,23 +57,20 @@ class BudgetTable extends React.Component {
 
     renderBudget(budgetData) {
       if (!this.state.recordLoaded) {
-       console.log("blank table row thing was called")
         return <tr>
         </tr>
       } else {
-        console.log("the actual budget table retrn was called")
 
-     if (budgetData.maxClicks !== null) {
+     if (budgetData.maxVisits !== null) {
         let matchingRecord = this.state.records.filter(record => record.name === budgetData.name)
         if (matchingRecord[0]) {
-          if(budgetData.maxClicks < matchingRecord[0].visits) {
-            console.log(budgetData + " is over budget")
+          if(budgetData.maxVisits < matchingRecord[0].visits) {
             return (
               <tr className="table-danger">
                 <td>{budgetData.name}</td>
-                <td>{budgetData.maxClicks}</td>
+                <td>{budgetData.maxVisits}</td>
                 <td>{matchingRecord[0].visits}</td>
-                <td >{budgetData.maxClicks - matchingRecord[0].visits}</td>
+                <td >{budgetData.maxVisits - matchingRecord[0].visits}</td>
               </tr>
               )
           }
@@ -82,9 +79,9 @@ class BudgetTable extends React.Component {
             return (
               <tr>
                 <td>{budgetData.name}</td>
-                <td>{budgetData.maxClicks}</td>
+                <td>{budgetData.maxVisits}</td>
                 <td>{matchingRecord[0].visits}</td>
-                <td>{budgetData.maxClicks - matchingRecord[0].visits}</td>
+                <td>{budgetData.maxVisits - matchingRecord[0].visits}</td>
               </tr>
               )
           }

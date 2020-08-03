@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const MAIN_URL = 'http://localhost:8000';
-const SIDE_URL = 'http://localhost:8080';
+const URL = 'http://localhost:8000';
 
 export const FETCH_SITES = 'FETCH_SITES';
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
@@ -12,7 +11,8 @@ export const SET_MAX = 'SET_MAX';
 
 
 export function fetchSites(aggregate = true) {
-  let url = MAIN_URL + "/sites"; 
+  let url = URL + "/sites"; 
+  console.log("fetchSites was called")
   
   if (aggregate) {
     url += "?aggregate=true";
@@ -26,7 +26,7 @@ export function fetchSites(aggregate = true) {
 }
 
 export function fetchCategories() {
-  let url = SIDE_URL + "/categories"; 
+  let url = URL + "/categories"; 
   
   console.log("fetchCategories was called")
   
@@ -38,9 +38,10 @@ export function fetchCategories() {
 }
 
 export function createCategory(category) {
-  let url = SIDE_URL + "/categories"; 
+  let url = URL + "/categories"; 
 
   // I need to figure out body
+  console.log("createCategory was called")
 
   const params = new URLSearchParams();
   if (category !== null) {
@@ -59,21 +60,21 @@ export function createCategory(category) {
   };
 }
 
-export function updateCategory(categoryId, siteName, maxClickNumber) {
-  let url = SIDE_URL + "/categories" + "/" + categoryId; 
+export function updateCategory(categoryId, siteName, maxVisits) {
+  let url = URL + "/categories" + "/" + categoryId; 
 
   console.log("updateCategory was hit")
   console.log("siteName is " + siteName)
-  console.log("maxClickNumber is " + maxClickNumber)
+  console.log("maxVisits is " + maxVisits)
 
   const params = new URLSearchParams();
   if (siteName !== null) {
     params.append('site', siteName)
     console.log("we appended " + siteName)
   }
-  if (maxClickNumber !== null) {
-    console.log("we appended " + maxClickNumber)
-    params.append('maxClicks', maxClickNumber);
+  if (maxVisits !== null) {
+    console.log("we appended " + maxVisits)
+    params.append('maxVisits', maxVisits);
   }
 
   console.log(params);
@@ -91,9 +92,9 @@ export function updateCategory(categoryId, siteName, maxClickNumber) {
 }
 
 export function updateSites(siteName, categoryName, categoryId) {
-  let url = MAIN_URL + "/sites" 
+  let url = URL + "/sites" 
 
-
+  console.log("updateSites was called")
   const params = new URLSearchParams();
   params.append('category', categoryName);
   params.append('url', siteName)
