@@ -98,7 +98,7 @@ clearBudget(categoryId, event) {
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown>  
-            <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
+            <Button variant="warning" onClick={(e) => this.clearBudget(categoryData._id, e)}>
                 Clear Budget
             </Button>
             </Dropdown>
@@ -146,7 +146,7 @@ clearBudget(categoryId, event) {
               </Dropdown.Menu>
             </Dropdown>
             <Dropdown>  
-          <Button variant="danger" onClick={(e) => this.clearBudget(categoryData._id, e)}>
+          <Button variant="warning" onClick={(e) => this.clearBudget(categoryData._id, e)}>
               Clear Budget
           </Button>
           </Dropdown>

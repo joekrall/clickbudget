@@ -5,22 +5,35 @@ const { request } = require('express');
 
 router.post('/categories', (req, res, next) => {
 
-  let category = new Category();
+  // Sanitize tandardize category name
 
-  category.name = req.body.name;
+  let newCategoryName = req.body.name;
+  if (newCategoryName.length > 25) {
+    res.send("Invalid entry")
+  } else {
 
-  // For future implementation
+  Category
+  .find()
+  .exec((err, categories) => {
 
-  // if (req.body.sites) {
-  //   for (let i = 0; i < req.body.sites.length; i++) {
-  //     category.sites.push(req.body.sites[i]);
-  //   }
-  // }
+    if (categories.some((category) => category.name === req.body.name)) {
+      res.send("Category already exists!")
+    } else {
 
-  category.save((err, cat) => {
-    if (err) throw err;
-    res.send(cat);
+      let category = new Category();
+
+      category.name = newCategoryName;
+
+      category.save((err, cat) => {
+        if (err) throw err;
+        res.send(cat);
+      })
+
+  }
+
   })
+
+}
 
 })
 

@@ -31,12 +31,15 @@ class SiteList extends React.Component {
 
   addNewCategory(event) {
     if (this.input.current.value) {
+      if (this.input.current.value.length <= 25) {
       const firstFunction = async () => {
         await this.props.createCategory(this.input.current.value); 
         this.props.fetchSites();
         this.props.fetchCategories();
       }
       firstFunction();
+      }
+      else alert("Invalid entry")
     } else alert("No category name has been entered");
   }
 
@@ -85,11 +88,11 @@ class SiteList extends React.Component {
     return (
       <ListGroup.Item className="list-group-item list-group-item-warning">
         <Row>
-       <Col><p>{siteData._id}</p></Col>
-       <Col><h5>{siteData.category}</h5></Col>
-       <Col><h5>{siteData.visitCount} </h5></Col>
-       <Col><p><Moment format="LT - MMM D, YYYY" local>{siteData.lastVisit}</Moment></p></Col>
-       <Col>
+       <Col md={3}><p>{siteData._id}</p></Col>
+       <Col md={2}><h5>{siteData.category}</h5></Col>
+       <Col md={2}><h5>{siteData.visitCount} </h5></Col>
+       <Col md={3}><p><Moment format="LT - MMM D, YYYY" local>{siteData.lastVisit}</Moment></p></Col>
+       <Col md={2}>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Set Category
@@ -109,11 +112,11 @@ class SiteList extends React.Component {
     return (
       <ListGroup.Item >
         <Row>
-        <Col><p>{siteData._id}</p></Col>
-        <Col><h5>{siteData.category}</h5></Col>
-        <Col><h5>{siteData.visitCount} </h5></Col>
-        <Col><p><Moment format="LT - MMM D, YYYY" local>{siteData.lastVisit}</Moment></p></Col>
-        <Col>
+        <Col md={3}><p>{siteData._id}</p></Col>
+        <Col md={2}><h5>{siteData.category}</h5></Col>
+        <Col md={2}><h5>{siteData.visitCount} </h5></Col>
+        <Col md={3}><p><Moment format="LT - MMM D, YYYY" local>{siteData.lastVisit}</Moment></p></Col>
+        <Col md={2}>
         <Dropdown>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Set Category
@@ -160,11 +163,11 @@ class SiteList extends React.Component {
       <ListGroup>
         <ListGroup.Item>
         <Row>
-          <Col><h3>URL</h3></Col>
-          <Col><h3>Category</h3></Col>
-          <Col><h3>Visit Count</h3></Col>
-          <Col><h3>Last Visit</h3></Col>
-          <Col><h3>Actions</h3></Col>
+          <Col md={3}><h3>URL</h3></Col>
+          <Col md={2}><h3>Category</h3></Col>
+          <Col md={2}><h3>Visit Count</h3></Col>
+          <Col md={3}><h3>Last Visit</h3></Col>
+          <Col md={2}><h3>Actions</h3></Col>
         </Row>
      </ListGroup.Item>
           {this.props.sites.map(this.renderSites)}</ListGroup>

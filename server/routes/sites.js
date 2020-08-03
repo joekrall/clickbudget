@@ -7,22 +7,35 @@ const { request } = require('express');
 
 router.post('/categories', (req, res, next) => {
 
-  let category = new Category();
+  // Sanitize tandardize category name
 
-  category.name = req.body.name;
+  let newCategoryName = req.body.name;
+  if (newCategoryName.length > 25) {
+    res.send("Invalid entry")
+  } else {
 
-  // For future implementation
+    Category
+      .find()
+      .exec((err, categories) => {
 
-  // if (req.body.sites) {
-  //   for (let i = 0; i < req.body.sites.length; i++) {
-  //     category.sites.push(req.body.sites[i]);
-  //   }
-  // }
+        if (categories.some((category) => category.name === req.body.name)) {
+          res.send("Category already exists!")
+        } else {
 
-  category.save((err, cat) => {
-    if (err) throw err;
-    res.send(cat);
-  })
+          let category = new Category();
+
+          category.name = newCategoryName;
+
+          category.save((err, cat) => {
+            if (err) throw err;
+            res.send(cat);
+          })
+
+        }
+
+      })
+
+  }
 
 })
 
@@ -102,6 +115,30 @@ router.put('/categories/:category', (req, res, next) => {
     }
 
 })
+
+
+// Finish delete operation tomorrow
+router.delete('/categories/:category', (req, res, next) => {
+
+  Category
+      .findById(req.params.category, (err, category) => {
+        if (err) throw err;
+
+
+      if (category.sites.includes(site)) {        
+          res.send("Site already exists in category!")
+      }
+        else {
+          category.sites.push(site);
+          category.save(err => {
+            if (err) throw err;
+            else console.log('Site successfully added!');
+          });
+          res.send(category);
+        }
+      });
+    }
+}
 
 // When the server begins listening, we send 
 // out an initial function call to get categoriesForRoutes,
