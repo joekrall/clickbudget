@@ -7,7 +7,7 @@ const { request } = require('express');
 
 router.post('/categories', (req, res, next) => {
 
-  // Sanitize tandardize category name
+  // Sanitize and standardize category name
 
   let newCategoryName = req.body.name;
   if (newCategoryName.length > 25) {
@@ -120,25 +120,13 @@ router.put('/categories/:category', (req, res, next) => {
 // Finish delete operation tomorrow
 router.delete('/categories/:category', (req, res, next) => {
 
+
   Category
-      .findById(req.params.category, (err, category) => {
-        if (err) throw err;
-
-
-      if (category.sites.includes(site)) {        
-          res.send("Site already exists in category!")
-      }
-        else {
-          category.sites.push(site);
-          category.save(err => {
-            if (err) throw err;
-            else console.log('Site successfully added!');
-          });
-          res.send(category);
-        }
-      });
-    }
-}
+  .deleteOne({ _id: req.params.category }, function (err) {
+    if (err) return handleError(err);
+    else res.send("Category " + req.params.category + " has been deleted");
+    });
+})
 
 // When the server begins listening, we send 
 // out an initial function call to get categoriesForRoutes,
@@ -199,7 +187,7 @@ function categorizeUrl(url) {
   if (flag) {
     return categorizationOfUrl;
   } else {
-    return "Uncategorized";
+    return "(Uncategorized)";
   }
 
 }
@@ -366,10 +354,47 @@ router.get('/sites', (req, res, next) => {
 })
 
 router.put('/sites', (req, res, next) => {
-
+ 
   let category = req.body.category;
   let url = req.body.url;
   let categoryId = req.body.categoryId;
+
+  // Making sites uncategorized
+  if (categoryId !== "none") {
+
+    console.log("inside the block")
+    let sitesToBeUpdated = [];
+
+
+    console.log(categoryId)
+    Category
+      .findById(categoryId, function (err, category) {
+        if (err) return handleError(err);
+
+        for (let i=0; i < category.sites.length; i++) {
+          sitesToBeUpdated.push(category.sites[i]);
+          console.log("sites to be updated has length now: " + sitesToBeUpdated.length)
+        }
+
+        console.log(sitesToBeUpdated);
+        for (let i = 0; i < sitesToBeUpdated.length; i++) {
+          console.log("site is now on deck: " + sitesToBeUpdated[i])
+          Site
+          .updateMany( 
+            {"url": sitesToBeUpdated[i]}, 
+            { "$set": { "category" : "(Uncategorized)" } }, 
+            {"multi": true}, 
+            (err) => {
+              if (err) return handleError(err);
+          });
+        }
+      });
+
+
+    res.send("All the sites are now uncategorized!")
+  // Categorizing sites based on newly selected category
+  } else {
+    
 
   Site
     .updateMany( 
@@ -379,6 +404,8 @@ router.put('/sites', (req, res, next) => {
       (err, result) => {
         res.send(result);
     });
+
+  }
 
 })
 

@@ -6,6 +6,7 @@ export const FETCH_SITES = 'FETCH_SITES';
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
 export const CREATE_CATEGORY = 'CREATE_CATEGORY';
 export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
+export const DELETE_CATEGORY = 'DELETE_CATEGORY';
 export const UPDATE_SITES = 'UPDATE_SITES';
 export const SET_MAX = 'SET_MAX';
 
@@ -91,14 +92,29 @@ export function updateCategory(categoryId, siteName, maxVisits) {
   };
 }
 
+export function deleteCategory(categoryId) {
+  let url = URL + "/categories" + "/" + categoryId; 
+
+  const request = axios({
+    method: 'delete',
+    url: url
+  });
+
+  return {
+    type: DELETE_CATEGORY,
+    payload: request,
+  };
+}
+
 export function updateSites(siteName, categoryName, categoryId) {
   let url = URL + "/sites" 
 
-  console.log("updateSites was called")
+  
   const params = new URLSearchParams();
   params.append('category', categoryName);
   params.append('url', siteName)
   params.append('categoryId', categoryId)
+
   const request = axios({
     method: 'put',
     url: url,

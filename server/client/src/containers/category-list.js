@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Row, Col, Container, ListGroup, Form, Button, FormControl, Dropdown } from "react-bootstrap";
-import { fetchSites, fetchCategories, updateCategory } from '../actions/index';
+import { fetchCategories, updateCategory, deleteCategory, updateSites }  from '../actions/index';
 
 
 class CategoryList extends React.Component {
@@ -15,6 +15,7 @@ class CategoryList extends React.Component {
     this.renderSites = this.renderSites.bind(this);
     this.submitBudget = this.submitBudget.bind(this);
     this.clearBudget = this.clearBudget.bind(this);
+    this.removeCategory = this.removeCategory.bind(this);
 
     this.input = React.createRef();
   }
@@ -49,6 +50,23 @@ clearBudget(categoryId, event) {
   firstFunction();
 }
 
+removeCategory(categoryId, event) {
+  event.preventDefault();
+
+  const firstFunction = async () => {
+    await this.props.updateSites(null, null, categoryId);
+    secondFunction();
+  }
+
+  const secondFunction = async () => {
+    await this.props.deleteCategory(categoryId);
+    this.props.fetchCategories();
+  }
+
+  firstFunction();
+}
+
+
  renderSites(site) {
    return(
     <ListGroup.Item>{site}</ListGroup.Item>
@@ -58,7 +76,7 @@ clearBudget(categoryId, event) {
 
   renderCategories(categoryData) {
 
-    if(categoryData.name !== "Uncategorized") {
+    if(categoryData.name !== "(Uncategorized)") {
       if(!categoryData.maxVisits) {
 
       return (
@@ -67,43 +85,57 @@ clearBudget(categoryId, event) {
             <Col md={2}><h5>{categoryData.name} </h5></Col>
             <Col md={2}><h5>{categoryData.maxVisits}</h5></Col>
             <Col md={5} className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
-            <Col md={3} className="d-flex">
+            <Col md={3}>
+              <Row>
+                <Col className="d-flex">
+     
+                  <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Set Budget
+                      </Dropdown.Toggle>
 
-              <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                  Set Budget
-                </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(50, categoryData._id, event)}>
+                          50
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(100, categoryData._id, event)}>
+                          100
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(500, categoryData._id, event)}>
+                          500
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(1000, categoryData._id, event)}>
+                          1000
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(2000, categoryData._id, event)}>
+                          2000
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
 
-                <Dropdown.Menu>
-                  <Dropdown.Item 
-                    onClick={event => this.submitBudget(50, categoryData._id, event)}>
-                    50
-                  </Dropdown.Item>
-                  <Dropdown.Item 
-                    onClick={event => this.submitBudget(100, categoryData._id, event)}>
-                    100
-                  </Dropdown.Item>
-                  <Dropdown.Item 
-                    onClick={event => this.submitBudget(500, categoryData._id, event)}>
-                    500
-                  </Dropdown.Item>
-                  <Dropdown.Item 
-                    onClick={event => this.submitBudget(1000, categoryData._id, event)}>
-                    1000
-                  </Dropdown.Item>
-                  <Dropdown.Item 
-                    onClick={event => this.submitBudget(2000, categoryData._id, event)}>
-                    2000
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-              <Dropdown>  
-            <Button variant="warning" onClick={(e) => this.clearBudget(categoryData._id, e)}>
-                Clear Budget
-            </Button>
-            </Dropdown>
+                    <Dropdown> 
+                      <Button variant="warning" onClick={(e) => this.clearBudget(categoryData._id, e)}>
+                          Clear Budget
+                      </Button>
+                  </Dropdown>
+                </Col>
+              </Row>
+              <Row className="mt-3">
+                <Col>
+                  <Dropdown>
+                    <Button variant="danger" onClick={(e) => this.removeCategory(categoryData._id, e)}>
+                    Remove Category
+                    </Button>
+                  </Dropdown>
+              </Col>
+            </Row>
           </Col>
-          </Row>
+        </Row>
       </ListGroup.Item>
       )
 
@@ -114,45 +146,58 @@ clearBudget(categoryId, event) {
           <Col md={2}><h5>{categoryData.name} </h5></Col>
           <Col md={2}><h5>{categoryData.maxVisits}</h5></Col>
           <Col md={5} className="d-block"><ListGroup variant="flush">{categoryData.sites.map(this.renderSites)}</ListGroup></Col>
-          <Col md={3} className="d-flex">
+          <Col md={3}>
+              <Row>
+                <Col className="d-flex">
+     
+                  <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Set Budget
+                      </Dropdown.Toggle>
 
-          
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Set Budget
-              </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(50, categoryData._id, event)}>
+                          50
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(100, categoryData._id, event)}>
+                          100
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(500, categoryData._id, event)}>
+                          500
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(1000, categoryData._id, event)}>
+                          1000
+                        </Dropdown.Item>
+                        <Dropdown.Item 
+                          onClick={event => this.submitBudget(2000, categoryData._id, event)}>
+                          2000
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
 
-              <Dropdown.Menu>
-                <Dropdown.Item 
-                  onClick={event => this.submitBudget(50, categoryData._id, event)}>
-                  50
-                </Dropdown.Item>
-                <Dropdown.Item 
-                  onClick={event => this.submitBudget(100, categoryData._id, event)}>
-                  100
-                </Dropdown.Item>
-                <Dropdown.Item 
-                  onClick={event => this.submitBudget(500, categoryData._id, event)}>
-                  500
-                </Dropdown.Item>
-                <Dropdown.Item 
-                  onClick={event => this.submitBudget(1000, categoryData._id, event)}>
-                  1000
-                </Dropdown.Item>
-                <Dropdown.Item 
-                  onClick={event => this.submitBudget(2000, categoryData._id, event)}>
-                  2000
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown>  
-          <Button variant="warning" onClick={(e) => this.clearBudget(categoryData._id, e)}>
-              Clear Budget
-          </Button>
-          </Dropdown>
-        </Col>
+                    <Dropdown> 
+                      <Button variant="warning" onClick={(e) => this.clearBudget(categoryData._id, e)}>
+                          Clear Budget
+                      </Button>
+                  </Dropdown>
+                </Col>
+              </Row>
+              <Row className="mt-3">
+                <Col>
+                  <Dropdown>
+                    <Button variant="danger" onClick={(e) => this.removeCategory(categoryData._id, e)}>
+                        Remove Category
+                    </Button>
+                  </Dropdown>
+              </Col>
+            </Row>
+          </Col>
         </Row>
-    </ListGroup.Item>
+      </ListGroup.Item>
     )
       }
     }
@@ -190,7 +235,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchCategories, updateCategory }, dispatch);
+  return bindActionCreators({ fetchCategories, updateCategory, deleteCategory, updateSites }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CategoryList);

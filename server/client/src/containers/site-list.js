@@ -48,7 +48,7 @@ class SiteList extends React.Component {
 
       // I need to add "none" to the database.
       const firstFunction = async () => {
-        await this.props.updateSites(siteName, categoryName, categoryId); 
+        await this.props.updateSites(siteName, categoryName, "none"); 
         this.props.updateCategory(categoryId, siteName, null); // Rule count is null
         this.props.fetchSites();
         this.props.fetchCategories();
@@ -83,7 +83,7 @@ class SiteList extends React.Component {
       categoriesForThisItem.push(categoryForThisItem);
     })
 
-    if(siteData.category === "Uncategorized") {
+    if(siteData.category === "Uncategorized" || siteData.category === "(Uncategorized)" || siteData.category === "") {
     
     return (
       <ListGroup.Item className="list-group-item list-group-item-warning">
