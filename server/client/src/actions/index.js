@@ -10,12 +10,15 @@ export const DELETE_CATEGORY = 'DELETE_CATEGORY';
 export const UPDATE_SITES = 'UPDATE_SITES';
 export const SET_MAX = 'SET_MAX';
 
-
+// For fetchSites, getting sites by aggregating all (trimmed) urls
+// is the default. Possible branch: create a way to toggle
+// between aggregated and non-aggregated site displays
+// on main page
 export function fetchSites(aggregate = true) {
+
   let url = URL + "/sites"; 
-  console.log("fetchSites was called")
   
-  if (aggregate) {
+  if (aggregate) { 
     url += "?aggregate=true";
   }
 
@@ -26,11 +29,38 @@ export function fetchSites(aggregate = true) {
   };
 }
 
+// Note: in order for sites to update correctly,
+// updateSites must be called before deleteCategory
+export function updateSites(siteName, categoryName, categoryId) {
+  let url = URL + "/sites" 
+
+
+  // Options for updating sites:
+  // 1) categoryId = "none": we perform a category update
+  // 2) Otherwise, we uncategorize all sites with the selected categoryId
+  // With either option, all params are appended each time
+  const params = new URLSearchParams();
+  params.append('category', categoryName);
+  params.append('url', siteName)
+  params.append('categoryId', categoryId)
+
+  const request = axios({
+    method: 'put',
+    url: url,
+    data: params
+  });
+
+  return {
+    type: UPDATE_SITES,
+    payload: request,
+    
+  };
+}
+
 export function fetchCategories() {
+
   let url = URL + "/categories"; 
-  
-  console.log("fetchCategories was called")
-  
+    
   const request = axios.get(url);
   return {
     type: FETCH_CATEGORIES,
@@ -39,10 +69,8 @@ export function fetchCategories() {
 }
 
 export function createCategory(category) {
-  let url = URL + "/categories"; 
 
-  // I need to figure out body
-  console.log("createCategory was called")
+  let url = URL + "/categories"; 
 
   const params = new URLSearchParams();
   if (category !== null) {
@@ -62,23 +90,18 @@ export function createCategory(category) {
 }
 
 export function updateCategory(categoryId, siteName, maxVisits) {
+
   let url = URL + "/categories" + "/" + categoryId; 
-
-  console.log("updateCategory was hit")
-  console.log("siteName is " + siteName)
-  console.log("maxVisits is " + maxVisits)
-
   const params = new URLSearchParams();
+
+  // Two options for updating category:
+  // add a site to the category or change the maxVisits
   if (siteName !== null) {
     params.append('site', siteName)
-    console.log("we appended " + siteName)
   }
   if (maxVisits !== null) {
-    console.log("we appended " + maxVisits)
     params.append('maxVisits', maxVisits);
   }
-
-  console.log(params);
 
   const request = axios({
     method: 'put',
@@ -91,6 +114,7 @@ export function updateCategory(categoryId, siteName, maxVisits) {
     payload: request
   };
 }
+
 
 export function deleteCategory(categoryId) {
   let url = URL + "/categories" + "/" + categoryId; 
@@ -106,24 +130,3 @@ export function deleteCategory(categoryId) {
   };
 }
 
-export function updateSites(siteName, categoryName, categoryId) {
-  let url = URL + "/sites" 
-
-  
-  const params = new URLSearchParams();
-  params.append('category', categoryName);
-  params.append('url', siteName)
-  params.append('categoryId', categoryId)
-
-  const request = axios({
-    method: 'put',
-    url: url,
-    data: params
-  });
-
-  return {
-    type: UPDATE_SITES,
-    payload: request,
-    
-  };
-}

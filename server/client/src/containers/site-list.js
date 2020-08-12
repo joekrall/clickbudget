@@ -12,8 +12,6 @@ class SiteList extends React.Component {
   constructor(props) {
     super(props);
 
-
-    // This binding is necessary to make `this` work in the callback
     this.addNewCategory = this.addNewCategory.bind(this);
     this.selectCategoryFromMenu = this.selectCategoryFromMenu.bind(this);
     this.renderSites = this.renderSites.bind(this);
@@ -29,17 +27,19 @@ class SiteList extends React.Component {
  }
 
 
+  // Validates category length before creating new category
   addNewCategory(event) {
+
+    const asyncFunction = async () => {
+      await this.props.createCategory(this.input.current.value); 
+      this.props.fetchSites();
+      this.props.fetchCategories();
+    }
+
     if (this.input.current.value) {
       if (this.input.current.value.length <= 25) {
-      const firstFunction = async () => {
-        await this.props.createCategory(this.input.current.value); 
-        this.props.fetchSites();
-        this.props.fetchCategories();
-      }
-      firstFunction();
-      }
-      else alert("Invalid entry")
+        asyncFunction();
+        } else alert("Invalid entry")
     } else alert("No category name has been entered");
   }
 
@@ -48,7 +48,11 @@ class SiteList extends React.Component {
 
       // I need to add "none" to the database.
       const firstFunction = async () => {
+
+        // since the categoryId parameter is none, the request made to the server
+        // will update all the sites with 
         await this.props.updateSites(siteName, categoryName, "none"); 
+        // then, the category will be deleted
         this.props.updateCategory(categoryId, siteName, null); // Rule count is null
         this.props.fetchSites();
         this.props.fetchCategories();

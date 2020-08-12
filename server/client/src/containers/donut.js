@@ -7,7 +7,6 @@ import 'moment';
 import 'moment-timezone';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official'
-
 var moment = require('moment');
 
 class Donut extends React.Component {
@@ -26,60 +25,51 @@ class Donut extends React.Component {
 
     componentDidMount() {
 
-      const fourthFunc = async () => {
+      const firstFetchSites = async () => {
+        await this.props.fetchSites();
+        secondFetchCategories();
+      }
+
+      const secondFetchCategories = async () => {
+        await this.props.fetchCategories();
+        thirdCreateSeries();
+      }
+
+      const thirdCreateSeries = async () => {
+        await this.createSeries();
+        fourthCreateTimeRange();
+      }
+
+      const fourthCreateTimeRange = async () => {
         await this.createTimeRange();
         this.highChartsRender();
       }
 
-      const thirdFunc = async () => {
-        await this.createSeries();
-        fourthFunc();
-      }
-
-      const secondFunc = async () => {
-        await this.props.fetchCategories();
-        thirdFunc();
-      }
-
-      const firstFunc = async () => {
-        await this.props.fetchSites();
-        secondFunc();
-      }
-
-      firstFunc();
+      firstFetchSites();
     }
 
+    // Used to create donut chat labels
     createSeries() {
       let series = [{name: "Visits", data: []}];
 
       this.props.categoryCountArray.forEach((categoryObject) => {
-        let dataObject = {};
-        dataObject["name"] = categoryObject.name;
-        dataObject["y"] = categoryObject.count;
+        let dataSeriesObject = {};
+        dataSeriesObject["name"] = categoryObject.name;
+        dataSeriesObject["y"] = categoryObject.count;
 
-        series[0].data.push(dataObject);
+        series[0].data.push(dataSeriesObject);
       })
 
       this.setState({series: series});
     }
 
+    // Displayed below donut chart
     createTimeRange() {
       
-      let timeRange = "";
-
-      let parsedFirstVisitTime = moment(this.props.firstVisit).format('h:mm a');
-      let parsedLastVisitTime = moment(this.props.lastVisit).format('h:mm a');;
       let parsedFirstVisitDay = moment(this.props.firstVisit).calendar();
       let parsedLastVisitDay = moment(this.props.lastVisit).calendar();
-
-      // create four parts to the visit. FirstVisitTime, LastVisitTime, FirstVisitDay, LastVisitDay
-      // Create a conditional for the Day part.
       
-      if (parsedFirstVisitDay === parsedLastVisitDay) {
-        timeRange = parsedFirstVisitDay + ", " + parsedFirstVisitTime + " - " + parsedLastVisitTime;
-      } else {
-        timeRange = parsedFirstVisitDay + ", " +  parsedFirstVisitTime + " - " + parsedLastVisitDay + ", " + parsedLastVisitTime;
-      }
+      let timeRange = parsedFirstVisitDay + " - " + parsedLastVisitDay;
 
       this.setState({timeRange: timeRange})
     }
