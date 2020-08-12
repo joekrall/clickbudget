@@ -18,22 +18,21 @@ class BudgetTable extends React.Component {
 
     this.createRecords = this.createRecords.bind(this)
     this.renderBudget = this.renderBudget.bind(this);
-
   }
 
   componentDidMount() {
 
-    const secondFunc = async () => {
+    const firstFetchSites = async () => {
+      await this.props.fetchSites();
+      thenFetchCategories();
+    }
+
+    const thenFetchCategories = async () => {
       await this.props.fetchCategories();
       this.createRecords();
     }
 
-    const firstFunc = async () => {
-      await this.props.fetchSites();
-      secondFunc();
-    }
-
-    firstFunc();
+    firstFetchSites();
 
   }
 

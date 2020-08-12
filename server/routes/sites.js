@@ -4,11 +4,11 @@ const Category = require('../models/categories')
 const axios = require('axios');
 const { request } = require('express');
 
+/* -------- Routes - /categories ----------------*/
 
 router.post('/categories', (req, res, next) => {
 
   // Sanitize and standardize category name
-
   let newCategoryName = req.body.name;
   if (newCategoryName.length > 25) {
     res.send("Invalid entry")
@@ -23,9 +23,7 @@ router.post('/categories', (req, res, next) => {
         } else {
 
           let category = new Category();
-
           category.name = newCategoryName;
-
           category.save((err, cat) => {
             if (err) throw err;
             res.send(cat);
@@ -51,10 +49,7 @@ router.get('/categories', (req, res, next) => {
 
 }) 
 
-
-// What I need to do here is decide if we have NULL come back
-// for maxClick or for site, to basically route the req to the
-// to the correct property to update.
+// Update category budget or sites
 router.put('/categories/:category', (req, res, next) => {
 
   let site = req.body.site;
@@ -117,7 +112,6 @@ router.put('/categories/:category', (req, res, next) => {
 })
 
 
-// Finish delete operation tomorrow
 router.delete('/categories/:category', (req, res, next) => {
 
 
@@ -142,7 +136,7 @@ const setCategories = (response) => {
   categoriesForRoutes = response.data;
 }
 
-// utils //
+/* ------------ utils - /sites ----------------*/
 
 const trimUrl = (url) => {
 
@@ -192,12 +186,14 @@ function categorizeUrl(url) {
 
 }
 
-// Routes //
+/* -------- Routes - /sites ----------------*/
 
 router.post('/sites', (req, res, next) => {
 
   const requestThenAddNewSites = async () => {
 
+  // First checking if any sites have been added to any categories
+  // Then create new site and categorize it if applicable
   await axios.get('http://localhost:8000/categories')
     .then(result => { console.log("Categories now re-populating"); setCategories(result); })
     .catch(error => { console.error(error); return Promise.reject(error); });
@@ -212,11 +208,9 @@ router.post('/sites', (req, res, next) => {
     site.lastVisitTime = req.body.lastVisitTime;
     site.typedCount = req.body.typedCount;
     site.visitCount = req.body.visitCount;
-
     site.title = req.body.title;
     site.url = trimmedUrl;
     site.fullUrl = req.body.url;
-
     site.category = urlCategory;
 
     site.save((err, s) => {
@@ -228,7 +222,6 @@ router.post('/sites', (req, res, next) => {
 
 requestThenAddNewSites();
 
-
 })
 
 
@@ -236,7 +229,7 @@ router.get('/sites', (req, res, next) => {
 
     const aggregate = req.query.aggregate;
 
-    // Return all the sites aggregated by category
+    // Return all the sites aggregated by (trimmed) url
     if (aggregate === 'true') {
       Site.aggregate([{
           $group: {
@@ -260,34 +253,36 @@ router.get('/sites', (req, res, next) => {
         ])
         .exec((err, aggregatedSites) => {
           
+          // Get count for each category
           let categoryCountArray = aggregatedSites.reduce((accumulator, currentSite) => {
-            let keyName = currentSite.category;
+            let currentCategoryName = currentSite.category;
             let currentVisitCount = currentSite.visitCount;
-            let newObject = {
-              name: keyName,
+            let categoryObject = {
+              name: currentCategoryName,
               count: currentVisitCount
             }
           
-            if (accumulator.some( obj => obj['name'] === newObject.name )) {
+            if (accumulator.some( obj => obj['name'] === categoryObject.name )) {
                 accumulator.forEach((obj) => {
-                  if (obj['name'] === newObject.name) {
-                    obj.count += newObject.count;
+                  if (obj['name'] === categoryObject.name) {
+                    obj.count += categoryObject.count;
                   }
                 })
               } else {
           
-                accumulator.push(newObject);
+                accumulator.push(categoryObject);
               }
             return accumulator;
           }, [])
 
+          // Get total visits across all aggregated sites
           let totalVisitCount = 0;
 
           for (i = 0; i < aggregatedSites.length; i++) {
             totalVisitCount += aggregatedSites[i].visitCount;
           }
 
-
+          // Get dates for first and last visit for each aggregate of sites
           let lastVisit = aggregatedSites.reduce((maxValue, currentAggregate) => {
             if (maxValue < currentAggregate.lastVisit) {
               maxValue = currentAggregate.lastVisit;
@@ -359,29 +354,17 @@ router.put('/sites', (req, res, next) => {
   let url = req.body.url;
   let categoryId = req.body.categoryId;
 
-  // Making sites uncategorized
+  // Uncategorize sites (when categoryId is deleted)
   if (categoryId !== "none") {
 
-    console.log("inside the block")
-    let sitesToBeUpdated = [];
-
-
-    console.log(categoryId)
     Category
       .findById(categoryId, function (err, category) {
         if (err) return handleError(err);
 
-        for (let i=0; i < category.sites.length; i++) {
-          sitesToBeUpdated.push(category.sites[i]);
-          console.log("sites to be updated has length now: " + sitesToBeUpdated.length)
-        }
-
-        console.log(sitesToBeUpdated);
-        for (let i = 0; i < sitesToBeUpdated.length; i++) {
-          console.log("site is now on deck: " + sitesToBeUpdated[i])
+        for (let i = 0; i < category.sites.length; i++) {
           Site
           .updateMany( 
-            {"url": sitesToBeUpdated[i]}, 
+            {"url": category.sites[i]}, 
             { "$set": { "category" : "(Uncategorized)" } }, 
             {"multi": true}, 
             (err) => {
@@ -392,20 +375,20 @@ router.put('/sites', (req, res, next) => {
 
 
     res.send("All the sites are now uncategorized!")
-  // Categorizing sites based on newly selected category
+
+  // Categorize site
   } else {
     
+    Site
+      .updateMany( 
+        {"url": url}, 
+        { "$set": { "category" : category } }, 
+        {"multi": true}, 
+        (err, result) => {
+          res.send(result);
+      });
 
-  Site
-    .updateMany( 
-      {"url": url}, 
-      { "$set": { "category" : category } }, 
-      {"multi": true}, 
-      (err, result) => {
-        res.send(result);
-    });
-
-  }
+    }
 
 })
 
