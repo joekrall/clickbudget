@@ -4,6 +4,7 @@ const Category = require('../models/categories')
 const axios = require('axios');
 const { request } = require('express');
 
+module.exports = function (router) {
 /* -------- Routes - /categories ----------------*/
 
 router.post('/categories', (req, res, next) => {
@@ -392,5 +393,4 @@ router.put('/sites', (req, res, next) => {
 
 })
 
-
-module.exports = router
+}

@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors');
 const keys = require('./config/keys');
+const router = require('./routes/sites')
+
 
 const app = express()
 
@@ -23,6 +25,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+
 app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
@@ -30,10 +33,7 @@ app.use(bodyParser.urlencoded({
 }))
 
 
-const routes = require('./routes/sites')
-
-// routes(app); ????
-app.use(routes)
+router(app);
 
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
