@@ -4,6 +4,9 @@ const Category = require('../models/categories')
 const axios = require('axios');
 const { request } = require('express');
 
+// I don't think this will work
+// But I basically need to figure out 
+// where heroku is making its API calls
 module.exports = function (router) {
 /* -------- Routes - /categories ----------------*/
 
@@ -127,15 +130,15 @@ router.delete('/categories/:category', (req, res, next) => {
 // out an initial function call to get categoriesForRoutes,
 // used by the categorizeUrl util below
 
-let categoriesForRoutes = [];
+// let categoriesForRoutes = [];
 
-axios.get('http://localhost:8000/categories')
-    .then(result => { console.log("Categories now populating"); setCategories(result); })
-    .catch(error => { console.error(error); return Promise.reject(error); });
+// axios.get('http://localhost:8000/categories')
+//     .then(result => { console.log("Categories now populating"); setCategories(result); })
+//     .catch(error => { console.error(error); return Promise.reject(error); });
 
-const setCategories = (response) => {
-  categoriesForRoutes = response.data;
-}
+// const setCategories = (response) => {
+//   categoriesForRoutes = response.data;
+// }
 
 /* ------------ utils - /sites ----------------*/
 
@@ -191,13 +194,13 @@ function categorizeUrl(url) {
 
 router.post('/sites', (req, res, next) => {
 
-  const requestThenAddNewSites = async () => {
+  // const requestThenAddNewSites = async () => {
 
-  // First checking if any sites have been added to any categories
-  // Then create new site and categorize it if applicable
-  await axios.get('http://localhost:8000/categories')
-    .then(result => { console.log("Categories now re-populating"); setCategories(result); })
-    .catch(error => { console.error(error); return Promise.reject(error); });
+  // // First checking if any sites have been added to any categories
+  // // Then create new site and categorize it if applicable
+  // await axios.get('http://localhost:8000/categories')
+  //   .then(result => { console.log("Categories now re-populating"); setCategories(result); })
+  //   .catch(error => { console.error(error); return Promise.reject(error); });
 
     let site = new Site();
 
@@ -219,9 +222,9 @@ router.post('/sites', (req, res, next) => {
       res.send(s);
     })
 
-}
+// }
 
-requestThenAddNewSites();
+// requestThenAddNewSites();
 
 })
 

@@ -33,9 +33,9 @@ app.use(bodyParser.urlencoded({
 }))
 
 
-router(app);
 
 const port = process.env.PORT || 8000;
+router(app);
 const server = http.createServer(app);
 server.listen(port);
 console.log('Server listening on:', port);
