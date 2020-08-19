@@ -194,19 +194,19 @@ function categorizeUrl(url) {
 
 router.post('/sites', (req, res, next) => {
 
-  // const requestThenAddNewSites = async () => {
+  const requestThenAddNewSites = async () => {
 
-  // // First checking if any sites have been added to any categories
-  // // Then create new site and categorize it if applicable
-  // await axios.get('http://localhost:8000/categories')
-  //   .then(result => { console.log("Categories now re-populating"); setCategories(result); })
-  //   .catch(error => { console.error(error); return Promise.reject(error); });
+  // First checking if any sites have been added to any categories
+  // Then create new site and categorize it if applicable
+  await axios.get('http://localhost:8000/categories')
+    .then(result => { console.log("Categories now re-populating"); setCategories(result); })
+    .catch(error => { console.error(error); return Promise.reject(error); });
 
     let site = new Site();
 
     // data processing
     let trimmedUrl = trimUrl(req.body.url);
-    let urlCategory = categorizeUrl(trimmedUrl);
+    //let urlCategory = categorizeUrl(trimmedUrl);
 
     // creating new site
     site.lastVisitTime = req.body.lastVisitTime;
@@ -222,9 +222,9 @@ router.post('/sites', (req, res, next) => {
       res.send(s);
     })
 
-// }
+}
 
-// requestThenAddNewSites();
+requestThenAddNewSites();
 
 })
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'http://localhost:8000';
+const URL = ''; // proxy: "http://localhost:8000"
 
 export const FETCH_SITES = 'FETCH_SITES';
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
